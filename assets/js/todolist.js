@@ -12,6 +12,68 @@ class ItemTodoList {
   }
 }
 
+class TodoList {
+
+  constructor(todolist, divID = 'listOutput') {
+    if (localStorage.todolist) {
+      this.loadFromLocalStorage()
+    } else {
+
+      if (divID) {
+        this.divID = divID
+      } else {
+        this.divID = 'listOutput'
+      }
+
+      if (!todolist) {
+        this.todolist = []
+      } else {
+        this.todolist = todolist
+      }
+    }
+  }
+
+  addListItem(listItem) {
+    if (listItem instanceof ItemTodoList) {
+      if (!listItem.textItem) {
+        showInputError()
+        return
+      }
+      this.todolist.push(listItem)
+      this.saveToLocalStorage()
+      this.printList()
+    } else {
+      console.error('Error: no list item')
+    }
+  }
+
+  showInputError() {
+    const error = document.querySelector('#inputTodo')
+    let i = 0
+    let h = setInterval(() => {
+      i++
+      error.classList.toggle('error')
+      if (i == 7) {
+        clearInterval(h)
+        error.classList.remove('error')
+        this.focusOnInput()
+      }
+    }, 300)
+
+  }
+}
+
+// const addButton = document.querySelector('#todolistform #addButton')
+
+// addButton.addEventListener('click', () => {
+//   let inputValue = document.querySelector('#inputTodo')
+//   // let listIconItem = document.querySelector('#listIconItem')
+//   myTodo.addListItem(new TodoListItem(inputValue.value, listIconItem.value))
+//   inputValue.value = ''
+// })
+
+
+
 
 (function(){
   let modal = document.querySelector('.icon-color-picker__modal-container');

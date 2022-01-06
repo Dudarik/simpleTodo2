@@ -18,6 +18,11 @@
   height: 100px;
 }
 
+#inputTodo.error::placeholder{
+  color: #FFFFFF;
+  transition: all .2s;
+}
+
 // .fa, .far, .fas, .fa-solid {
 //   font-family: "Font Awesome 5 Free";
 // }
