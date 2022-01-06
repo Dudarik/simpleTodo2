@@ -1,0 +1,6 @@
+.stop-scrolling {
+  // height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  -ms-touch-action: none;
+}

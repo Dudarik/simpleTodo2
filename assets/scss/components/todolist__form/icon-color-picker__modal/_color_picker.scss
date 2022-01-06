@@ -1,0 +1,41 @@
+.icon-color-picker__colors{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+
+  grid-column-gap: .5rem;
+  grid-row-gap: .5rem;
+
+  border-bottom: 1px solid lightgray;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  .color-picker-item{    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: .4rem;
+
+    font-size: 3rem;
+
+    cursor: pointer;
+    // &.icon-item__color-0{
+    //   color: default;
+    // }
+    // &.icon-item__color-1{
+    //   color: red;
+    // }
+    // &.icon-item__color-2{
+    //   color: green;
+    // }
+    // &.icon-item__color-3{
+    //   color: blue;
+    // }
+    &:hover{
+      background-color: yellowgreen;
+      border-radius: .5rem;
+    }
+  }
+
+}

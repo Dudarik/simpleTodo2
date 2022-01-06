@@ -1,0 +1,37 @@
+$blue : #91CCC2;
+
+.inputdata__button{  
+  font-size:1.5rem;
+  border: 2px solid white;
+  border-radius: 100px;
+  width: 60px;
+  height: 60px;
+  padding: 5px;
+  background-color: var(--mainbg-color);
+  cursor: pointer;
+  transition: .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+ 
+}
+
+.icon{
+ position: relative;
+  //top: 50%;
+  // transform: translateY(-50%);
+ text-align:center;
+  
+}
+
+//Hover
+//-----------------------
+.inputdata__button:hover{
+  //width:125px;
+  background-color: white;
+   box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
+  color: $blue;
+  transition:.3s;
+}
+
+.inputdata__button:active{
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
+  transition: .05s
+}

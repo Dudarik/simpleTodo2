@@ -1,0 +1,39 @@
+.icon-item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgba($color: #FFF, $alpha: .8);
+  font-size: 2rem;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.icon-item .check{
+  display: block;
+  opacity: .9;
+  color: var(--mainbg-color);
+  font-size: 4rem;
+  position: absolute;
+  z-index: 100;
+}
+
+.icon-item__color-0{
+  color: var(--text-color);
+}
+
+.icon-item__color-1{
+  color: var(--icon-item-color-1);
+}
+
+.icon-item__color-2{
+  color: var(--icon-item-color-2);
+}
+
+.icon-item__color-3{
+  color: var(--icon-item-color-3);
+}
+
+
+

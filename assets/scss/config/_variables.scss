@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* ========= VARIABLE CSS ========= */
+
+:root {
+  /* ========= colors ========= */
+  --hue-color: 225;
+
+  --first-color: hsl(var(--hue-color), 48%, 35%);
+  --title-color: hsl(var(--hue-color), 48%, 22%);
+  --text-color: hsl(var(--hue-color), 12%, 35%);
+  --body-color: hsl(var(--hue-color), 48%, 98%);
+
+  --mainbg-color: #9ACD32;
+  --container-color: #fff;
+
+  --icon-item-color-1: red;
+  --icon-item-color-2: green;
+  --icon-item-color-3: blue;
+
+  /* ========= Fonts and typography ========= */
+  --body-font: 'Poppins', sans-serif;
+
+  --normal-font-size: .938rem;
+  --small-font-sie: 813rem;
+  --smaller-font-sie: .75rem;
+
+  @media screen and (min-width: 968px) {
+    --normal-font-size: 1rem;
+    --small-font-sie: .875rem;
+    --smaller-font-sie: .813rem;
+  }
+}

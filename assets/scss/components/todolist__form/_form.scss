@@ -1,0 +1,17 @@
+.todolist-form{
+  width: 100%;
+  padding: 1rem .5rem;
+  max-width: 600px;
+
+  background-color: var(--mainbg-color);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+  // border: 1px dotted green;
+
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}

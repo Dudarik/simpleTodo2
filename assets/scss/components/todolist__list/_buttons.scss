@@ -1,0 +1,21 @@
+.button i{
+  font-size: 2rem;
+  margin-right: 2rem;
+  color: #aaa;
+}
+.edit-button i{
+  color: rgb(41, 197, 41);
+}
+
+.delete-button i{
+  color: rgb(240, 144, 144);
+}
+.edit-button:hover i{
+  transition: .5s color;
+  color: green;
+}
+
+.delete-button:hover i{
+  transition: .5s color;
+  color: red;
+}

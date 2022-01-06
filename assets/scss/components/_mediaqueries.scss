@@ -1,0 +1,115 @@
+// @media screen and (min-width: 768px) {
+  
+// }
+@media (max-width: 767px) {
+  .mr-ld-1{
+    margin-right: 0 !important;
+  }
+}
+@media (min-width: 768px){
+  .container{
+    max-width: 768px;
+  }
+
+  .mt-sd-1{
+    margin-top: 0 !important;
+  }
+  .todolist-form{
+    max-width: 768px;
+  }
+
+  .todolist-form__inputdata{
+    flex-direction: row;
+  }
+
+  .inputdata__text-input{
+    padding: .3rem;
+    border-radius: 1rem;
+    border: none;
+  }
+
+  .inputdata__button{
+    margin-top: 0;
+  }
+
+  .inputdata__button{
+    width: 50px;
+    height: 50px;
+  }
+
+  .icon-color-picker__button{
+    margin-right: 2rem;
+  }
+
+  .todolist__item{
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .icon-item{
+      left: 1rem;
+      top: calc(50% - 2rem);
+    }
+
+    .todolist__item-text{
+      margin-right: 1rem;
+      margin-left: 5.5rem;
+      font-size: 1.3rem;
+    }
+    
+    .todolist__datetime-wrappaer{
+      margin-left: auto;
+    }
+    
+    .todolist__item-date{
+      font-size: 1.1rem;
+    }
+
+    .control-buttons__wrapper{
+      flex-direction: row-reverse;
+    }
+  }
+}
+
+@media (min-width: 991px) {
+  .container{
+    max-width: 800px;
+  }
+  .todolist-form{
+    max-width: 800px;
+  }
+
+  .inputdata__text-input{
+    font-size: 1.3rem;
+    min-width: 30rem;
+    padding: .5rem;
+  }
+
+  .inputdata__button{
+    width: 50px;
+    height: 50px;
+  }
+
+  .custom-select {
+    height: 40px;
+  }
+
+  .todolist__item{
+
+    .todolist__item-text{
+      font-size: 1.1rem;
+      font-weight: normal;
+    }
+    
+    .todolist__datetime-wrappaer{
+      margin-left: auto;
+    }
+    
+    .todolist__item-date{
+      font-size: 1rem;
+    }
+  }
+}
+@media (min-width: 1201px) {  
+  /* стили для lg-устройств */
+}
