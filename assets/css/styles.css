@@ -18,6 +18,30 @@
   height: 100px;
 }
 
+#inputTodo.error::-webkit-input-placeholder {
+  color: #FFFFFF;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+}
+
+#inputTodo.error:-ms-input-placeholder {
+  color: #FFFFFF;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+}
+
+#inputTodo.error::-ms-input-placeholder {
+  color: #FFFFFF;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+}
+
+#inputTodo.error::placeholder {
+  color: #FFFFFF;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+}
+
 /* ========= VARIABLE CSS ========= */
 :root {
   /* ========= colors ========= */
