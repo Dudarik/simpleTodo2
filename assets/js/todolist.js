@@ -680,7 +680,7 @@ class TodoList {
 // indexedDB.deleteDatabase('todoListDB')
 
 let tdl = new TodoList(defaultSettings);
-console.log(tdl);
+// console.log(tdl);
 
 
 // ***************************************tests***************************************
