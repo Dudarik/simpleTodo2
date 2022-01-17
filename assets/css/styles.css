@@ -205,6 +205,11 @@ body {
   border-radius: .5rem;
 }
 
+.icon-color-picker__icons i.icon__active {
+  background-color: lightgray;
+  border-radius: .5rem;
+}
+
 .icon-color-picker__colors {
   display: -ms-grid;
   display: grid;
@@ -219,7 +224,7 @@ body {
   padding-bottom: 1rem;
 }
 
-.icon-color-picker__colors .color-picker-item {
+.icon-color-picker__colors i {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -234,8 +239,13 @@ body {
   cursor: pointer;
 }
 
-.icon-color-picker__colors .color-picker-item:hover {
+.icon-color-picker__colors i:hover {
   background-color: yellowgreen;
+  border-radius: .5rem;
+}
+
+.icon-color-picker__colors i.icon-color__active {
+  background-color: lightgray;
   border-radius: .5rem;
 }
 

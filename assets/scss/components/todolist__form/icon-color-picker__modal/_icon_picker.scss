@@ -22,5 +22,10 @@
       background-color: rgb(221, 245, 175);
       border-radius: .5rem;
     }
+
+    &.icon__active{
+      background-color: lightgray;
+      border-radius: .5rem;
+    }
   }
 }

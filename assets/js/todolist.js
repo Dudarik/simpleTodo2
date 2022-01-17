@@ -1,4 +1,4 @@
-let itemIconsArray = {
+let itemIconsObj = {
   0: 'far fa-edit',
   1: 'far fa-grin',
   2: 'fas fa-address-book',
@@ -32,10 +32,14 @@ let defaultSettings = {
   dbCreated: false,
   outputTemplateID: '#tmpl_listOutput',
   outputID: '#listOutput',
+  lastIcon: 0,
+  lastIconColor: 0,
   DB_NAME: 'todoListDB',
   DB_VERSION: 1,
   DB_STORE_NAME: 'todoListItems',
 }
+
+
 
 class ItemTodoList {
   constructor(itemText = '', itemIcon = 0, itemIconColor = 0) {
@@ -73,90 +77,319 @@ class TodoList {
       this.createDB()
     }
 
+    this.todoListItems = []
+
     this.todoListInit()
   }
 
-  todoListInit(){
+  createListItem() {
+    let inputValue = document.querySelector('#inputTodo')
+    let itemIcon = document.querySelector('#icon-color-picker-button').getAttribute('data-item-icon')
+    let itemIconColor = document.querySelector('#icon-color-picker-button').getAttribute('data-item-icon-color')
+
+    let listItem = new ItemTodoList(inputValue.value, itemIcon, itemIconColor)
+
+    inputValue.value = ''
+
+    return listItem
+  }
+
+  setIconColorButton(iconID, colorID) {
+
+    let iconColorPickerButton = document.querySelector('#icon-color-picker-button')
+
+    iconColorPickerButton.setAttribute('data-item-icon', iconID)
+    iconColorPickerButton.setAttribute('data-item-icon-color', colorID)
+
+    // *****************************************************************************************************
+
+    let icon = iconColorPickerButton.querySelector('.save-button-icon')
+
+    icon.removeAttribute('class')
+    icon.classList.add('save-button-icon')
+    icon.classList.add(itemIconsColors[colorID])
+
+    // *****************************************************************************************************
+
+    let icon_i = icon.querySelector('i')
+
+    icon_i.removeAttribute('class')
+    let iconClasses = itemIconsObj[iconID].split(' ')
+
+    for (let i = 0; i < iconClasses.length; i++) {
+      icon_i.classList.add(iconClasses[i])
+    }
+    // *****************************************************************************************************
+  }
+
+  todoListInit() {
+
+    this.iconColorPickerModal()
+
+    this.loadListFromDB().then(rs => this.renderList(this.todoListItems))
+
+    this.setIconColorButton(this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor)
+
+    let addButton = document.querySelector('#addButton')
+
+    addButton.addEventListener('click', () => {
+
+      this.addTodoListItem(this.createListItem())
+
+    })
+
     let output = document.querySelector(this.todoListSettings.outputID)
-    console.log()
 
     output.addEventListener('click', event => {
-      console.log(event.target.closest('li'))
-      // switch (event.target.value) {
-      //   case '':
-          
-      //     break;
-      
-      //   default:
-      //     break;
-      // }
+
+      let currentElement = event.target
+
+      if (currentElement.tagName == 'I') currentElement = event.target.parentElement
+
+      let currentElementID = currentElement.getAttribute('id')
+
+      let itemID = currentElement.closest('li').getAttribute('data-ItemID')
+
+      // console.log(currentElement)
+
+      switch (currentElementID) {
+        case 'delete-button':
+          console.log('press delete button', itemID)
+          this.deleteListItem(itemID)
+          break;
+
+        case 'edit-button':
+          console.log('press edit button', itemID)
+          break;
+
+        case 'icon-item':
+          console.log('press icon-item button', itemID)
+          break;
+
+        default:
+          console.log('press unknown button', itemID)
+          break;
+      }
     })
   }
 
-  addTodoListItem(todoListItem){
+  addTodoListItem(todoListItem) {
+
     if (!(todoListItem instanceof ItemTodoList)) {
       console.log(new Error('Не правильный формат данных'))
     }
 
-    if (!todoListItem.itemText){
+    if (!todoListItem.itemText) {
       this.showInputError()
       return
     }
 
-    this.todoListItems.push(todoListItem)
-    this.saveToDB(todoListItem)
-    this.renderList(this.todoListItems)
+    this.saveListToDB(todoListItem).then(rs => this.renderList(this.todoListItems))
   }
 
-  saveToDB(todoListItem) {
-    
-    let openRequest = indexedDB.open(this.todoListSettings.DB_NAME, this.todoListSettings.DB_VERSION)
+  deleteListItem(itemID) {
+    if (!itemID) {
+      console.log('Отсутствует индентификатор записи')
+      return
+    }
 
-    openRequest.onupgradeneeded = this.upgradeDB(openRequest)
+    this.deleteItemFromDB(itemID).then(rs => this.renderList(this.todoListItems))
+  }
 
-    openRequest.onsuccess = event => {
+  deleteItemFromDB(itemID) {
+    return new Promise((rs, rj) => {
 
-      let db = event.target.result
+      let openRequest = indexedDB.open(this.todoListSettings.DB_NAME, this.todoListSettings.DB_VERSION)
 
-      if (db) {
+      openRequest.onupgradeneeded = this.upgradeDB(openRequest)
 
-        let transaction = db.transaction(this.todoListSettings.DB_STORE_NAME, this.todoListSettings.STORE_ACCESS_RW)
+      openRequest.onsuccess = event => {
 
-        let objStore = transaction.objectStore(this.todoListSettings.DB_STORE_NAME)
+        let db = event.target.result
 
-        let request = objStore.put(todoListItem, todoListItem.itemID)
+        if (db) {
 
-        request.onsuccess = event => {
-          console.log('ok')
-        }
+          // console.log(this.todoListSettings.DB_STORE_NAME)
 
-        request.onerror = event => {
-          console.log('что-то пошло не так')
-        }
+          let transaction = db.transaction(this.todoListSettings.DB_STORE_NAME, STORE_ACCESS_RW)
 
+          let objStore = transaction.objectStore(this.todoListSettings.DB_STORE_NAME)
 
-        transaction.onsuccess = event => {
-          console.log('transaction OK')
-        }
+          let request = objStore.delete(Number(itemID))
 
-        transaction.onsuccess = event => {
-          console.log('transaction NOT ok')
+          request.onsuccess = event => {
+
+            let idItemInArray = this.todoListItems.findIndex(item => item.itemID == itemID)
+
+            this.todoListItems.splice(idItemInArray, 1)
+            rs(this.todoListItems)
+          }
+
+          request.onerror = event => {
+            console.log('Данные не сохранились, ошибка запроса')
+          }
+
+          transaction.onsuccess = event => {
+            console.log('transaction save OK')
+          }
+
+          transaction.onsuccess = event => {
+            console.log('transaction save NOT ok')
+          }
+
         }
       }
-    }
-    openRequest.onerror = event => {
-      console.log('Ошибка открытия базы данных')
-    }
+      openRequest.onerror = event => {
+        console.log('Ошибка открытия базы данных')
+      }
+    })
+  }
+
+  clearDB() {
+    return new Promise((rs, rj) => {
+
+      let openRequest = indexedDB.open(this.todoListSettings.DB_NAME, this.todoListSettings.DB_VERSION)
+
+      openRequest.onupgradeneeded = this.upgradeDB(openRequest)
+
+      openRequest.onsuccess = event => {
+
+        let db = event.target.result
+
+        if (db) {
+
+          // console.log(this.todoListSettings.DB_STORE_NAME)
+
+          let transaction = db.transaction(this.todoListSettings.DB_STORE_NAME, STORE_ACCESS_RW)
+
+          let objStore = transaction.objectStore(this.todoListSettings.DB_STORE_NAME)
+
+          let request = objStore.clear()
+
+          request.onsuccess = event => {
+            this.todoListItems = []
+            console.log('clear db')
+          }
+
+          request.onerror = event => {
+            console.log('Ошибка очистки store DB')
+          }
+
+
+          transaction.onsuccess = event => {
+            console.log('transaction clearDB OK')
+          }
+
+          transaction.onsuccess = event => {
+            console.log('transaction clearDB ok')
+          }
+
+        }
+      }
+      openRequest.onerror = event => {
+        console.log('Ошибка открытия базы данных')
+      }
+    })
+  }
+
+  loadListFromDB() {
+    return new Promise((rs, rj) => {
+      let openRequest = indexedDB.open(this.todoListSettings.DB_NAME, this.todoListSettings.DB_VERSION)
+
+      openRequest.onupgradeneeded = this.upgradeDB(openRequest)
+
+      openRequest.onsuccess = event => {
+        let db = event.target.result
+
+        if (db) {
+          let transaction = db.transaction(this.todoListSettings.DB_STORE_NAME, STORE_ACCESS_R)
+
+          let objStore = transaction.objectStore(this.todoListSettings.DB_STORE_NAME)
+
+          let request = objStore.getAll()
+
+          request.onsuccess = event => {
+            // console.log(request.result)
+            this.todoListItems = request.result
+            rs(request.result)
+          }
+
+          request.onerror = event => {
+            console.log('Обшибка запроса загрузки данных')
+          }
+
+          transaction.onsuccess = event => {
+            console.log('transaction read OK')
+          }
+
+          transaction.onsuccess = event => {
+            console.log('transaction read NOT ok')
+          }
+        }
+      }
+
+      openRequest.onerror = event => {
+        console.log('Ошибка открытия базы данных')
+      }
+
+    })
+  }
+
+  saveListToDB(todoListItem) {
+    return new Promise((rs, rj) => {
+
+      let openRequest = indexedDB.open(this.todoListSettings.DB_NAME, this.todoListSettings.DB_VERSION)
+
+      openRequest.onupgradeneeded = this.upgradeDB(openRequest)
+
+      openRequest.onsuccess = event => {
+
+        let db = event.target.result
+
+        if (db) {
+
+          // console.log(this.todoListSettings.DB_STORE_NAME)
+
+          let transaction = db.transaction(this.todoListSettings.DB_STORE_NAME, STORE_ACCESS_RW)
+
+          let objStore = transaction.objectStore(this.todoListSettings.DB_STORE_NAME)
+
+          let request = objStore.put(todoListItem)
+
+          request.onsuccess = event => {
+            this.todoListItems.push(todoListItem)
+            rs(this.todoListItems)
+          }
+
+          request.onerror = event => {
+            console.log('Данные не сохранились, ошибка запроса')
+          }
+
+
+          transaction.onsuccess = event => {
+            console.log('transaction save OK')
+          }
+
+          transaction.onsuccess = event => {
+            console.log('transaction save NOT ok')
+          }
+
+        }
+      }
+      openRequest.onerror = event => {
+        console.log('Ошибка открытия базы данных')
+      }
+    })
   }
 
   upgradeDB(rq) {
     return () => {
 
       let db = rq.result
-      
+
       if (!db.objectStoreNames.contains(this.todoListSettings.DB_STORE_NAME)) {
         db.createObjectStore(this.todoListSettings.DB_STORE_NAME, {
-          keyPath: 'idItem'
+          keyPath: 'itemID'
         })
       }
 
@@ -200,7 +433,7 @@ class TodoList {
 
   renderList(listItems, templateID = this.todoListSettings.outputTemplateID, outputID = this.todoListSettings.outputID) {
 
-    if (!Array.isArray(listItems) || !listItems.length) {
+    if (!Array.isArray(listItems)) {
       console.log(new Error('renderList(): Отсутствуют данные для вывода или имеют не верный формат, ожидается массив.'))
       return
     }
@@ -213,7 +446,19 @@ class TodoList {
       return
     }
 
-    for (let i = 0; i < listItems.length; i++) {
+    output.innerHTML = ''
+
+    if (listItems.length == 0) {
+      console.log(this.todoListItems.length)
+      let noData = document.createElement('p')
+      noData.innerHTML = 'Пока что нет ни одной записи! Введите текст и нажмите сохранить!'
+      output.appendChild(noData)
+      return
+    }
+
+    // console.log('items', listItems)
+
+    for (let i = listItems.length - 1; i >= 0; i--) {
 
       let cloneTmpl = tmpl.content.cloneNode(true)
       let li = cloneTmpl.querySelector('li')
@@ -222,11 +467,13 @@ class TodoList {
       let itemText = cloneTmpl.querySelector('.todolist__item-text')
       let itemDate = cloneTmpl.querySelector('.todolist__item-date')
 
+      // console.log(listItems[i], listItems.length,i)
+
       li.setAttribute('data-itemID', listItems[i].itemID)
 
       iconDiv.classList.add(itemIconsColors[listItems[i].itemIconColor])
 
-      let iconClassArray = itemIconsArray[listItems[i].itemIcon].split(' ')
+      let iconClassArray = itemIconsObj[listItems[i].itemIcon].split(' ')
 
       for (let i = 0; i < iconClassArray.length; i++) {
         iconItem.classList.add(iconClassArray[i])
@@ -237,6 +484,12 @@ class TodoList {
 
       output.appendChild(cloneTmpl)
     }
+  }
+
+  focusOnInput() {
+    const inputTodo = document.getElementById('inputTodo')
+    console.log(inputTodo)
+    inputTodo.focus()
   }
 
   showInputError() {
@@ -253,14 +506,14 @@ class TodoList {
     }, 300)
   }
 
-  getItemFromItemsArray(itemID){
+  getItemFromItemsArray(itemID) {
     return this.todoListItems.filter(item => item.itemID == itemID)[0]
   }
 
   formatDate(date) {
-    let diff = new Date() - date; 
+    let diff = new Date() - date;
 
-    if (diff < 1000) { 
+    if (diff < 1000) {
       return 'прямо сейчас';
     }
 
@@ -295,6 +548,121 @@ class TodoList {
 
     return d.slice(0, 3).join('.') + ' ' + d.slice(3).join(':');
   }
+
+  iconColorPickerModal() {
+    let modal = document.querySelector('.icon-color-picker__modal-container');
+    // let closeButton = document.querySelector('.icon-color-picker__close-button ');
+    let modalTriggers = document.querySelectorAll('[data-trigger]');
+
+    let isModalOpen = false;
+    let pageYOffset = 0;
+
+    let icons = document.querySelector('.icon-color-picker__icons')
+    let colors = document.querySelector('.icon-color-picker__colors')
+
+    let currentIconColor = [this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor]
+
+    for (let i = 0; i < Object.keys(itemIconsObj).length; i++) {
+
+      let icon = document.createElement('i')
+      let cl = itemIconsObj[i].split(' ')
+
+      icon.setAttribute('data-icon-id', Object.keys(itemIconsObj)[i])
+
+      for (let j = 0; j < cl.length; j++) {
+
+        icon.classList.add(cl[j])
+
+      }
+      if (i == this.todoListSettings.lastIcon) icon.classList.add('icon__active')
+
+      icons.appendChild(icon)
+    }
+
+    for (let i = 0; i < Object.keys(itemIconsColors).length; i++) {
+
+      let color = document.createElement('i')
+
+      color.classList.add('fas')
+      color.classList.add('fa-fill-drip')
+      color.classList.add(itemIconsColors[i])
+      
+
+      color.setAttribute('data-icon-color-id', Object.keys(itemIconsColors)[i])
+      
+      if (i == this.todoListSettings.lastIconColor) color.classList.add('icon-color__active')
+
+      colors.appendChild(color)
+    }
+
+
+    icons.addEventListener('click', event => {
+      if (currentIconColor[0] != this.todoListSettings.lastIcon) icons.querySelector(`[data-icon-id="${currentIconColor[0]}"]`).classList.remove('icon__active')
+
+      currentIconColor[0] = event.target.getAttribute('data-icon-id')
+
+      icons.querySelector(`[data-icon-id="${this.todoListSettings.lastIcon}"]`).classList.remove('icon__active')
+
+      event.target.classList.add('icon__active')
+    })
+
+    colors.addEventListener('click', event => {
+      console.log(event.target)
+      console.log(this.todoListSettings.lastIconColor)
+      if (currentIconColor[1] != this.todoListSettings.lastIconColor) colors.querySelector(`[data-icon-color-id="${currentIconColor[1]}"]`).classList.remove('icon-color__active')
+
+      currentIconColor[1] = event.target.getAttribute('data-icon-color-id')
+      colors.querySelector(`[data-icon-color-id="${this.todoListSettings.lastIconColor}"]`).classList.remove('icon-color__active')      
+      event.target.classList.add('icon-color__active')
+    })    
+
+    let openModal = () => {
+      pageYOffset = window.pageYOffset;
+      modal.classList.add('icon-color-picker__is-open');
+      isModalOpen = true;
+      document.querySelector('body').classList.add('stop-scrolling')
+      document.querySelector('html').classList.add('stop-scrolling')
+    }
+
+    let cancelModal = () => {
+      // currentIconColor = [-1, -1]
+      if(currentIconColor[0] != this.todoListSettings.lastIcon){
+        icons.querySelector(`[data-icon-id="${currentIconColor[0]}"]`).classList.remove('icon__active')
+        icons.querySelector(`[data-icon-id="${this.todoListSettings.lastIcon}"]`).classList.add('icon__active')
+      }
+
+      if(currentIconColor[1] != this.todoListSettings.lastIconColor){
+        colors.querySelector(`[data-icon-color-id="${currentIconColor[1]}"]`).classList.remove('icon-color__active')
+        colors.querySelector(`[data-icon-color-id="${this.todoListSettings.lastIconColor}"]`).classList.add('icon-color__active')  
+      }
+      modal.classList.remove('icon-color-picker__is-open');
+      isModalOpen = false;
+      document.querySelector('body').classList.remove('stop-scrolling')
+      document.querySelector('html').classList.remove('stop-scrolling')
+    }
+
+    let exitAndSaveModal = () => {
+      this.todoListSettings.lastIcon = currentIconColor[0]
+      this.todoListSettings.lastIconColor = currentIconColor[1]      
+
+      this.setIconColorButton(this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor)
+
+      this.saveSettingsToLocalStorage()
+      
+      cancelModal()
+    }
+
+    modalTriggers.forEach(function (item) {
+      item.addEventListener('click', openModal);
+    })
+
+    document.querySelector('.icon-color-picker__modal-container').addEventListener('click', event => {
+      // console.log(event.target)
+      if (event.target == document.querySelector('.icon-color-picker__modal-container') || event.target == document.querySelector('#icon-color-picker__cancel-button') || event.target == document.querySelector('#icon-color-picker_cbi')) cancelModal()
+
+      if (event.target == document.querySelector('#icon-color-picker__ok-button') || event.target == document.querySelector('#icon-color-picker_obi')) exitAndSaveModal()
+    });
+  }
 }
 
 // const addButton = document.querySelector('#todolistform #addButton')
@@ -309,7 +677,7 @@ class TodoList {
 
 // ***************************************tests***************************************
 
-indexedDB.deleteDatabase('todoListDB')
+// indexedDB.deleteDatabase('todoListDB')
 
 let tdl = new TodoList(defaultSettings);
 console.log(tdl);
@@ -320,44 +688,44 @@ console.log(tdl);
 
 
 
-(function () {
-  let modal = document.querySelector('.icon-color-picker__modal-container');
-  let closeButton = document.querySelector('.icon-color-picker__close-button ');
-  let modalTriggers = document.querySelectorAll('[data-trigger]');
+// (function () {
+//   let modal = document.querySelector('.icon-color-picker__modal-container');
+//   // let closeButton = document.querySelector('.icon-color-picker__close-button ');
+//   let modalTriggers = document.querySelectorAll('[data-trigger]');
 
-  let isModalOpen = false;
-  let pageYOffset = 0;
+//   let isModalOpen = false;
+//   let pageYOffset = 0;
 
-  let openModal = function () {
-    pageYOffset = window.pageYOffset;
-    modal.classList.add('icon-color-picker__is-open');
-    isModalOpen = true;
-    document.querySelector('body').classList.add('stop-scrolling')
-    document.querySelector('html').classList.add('stop-scrolling')
-  }
+//   let openModal = function () {
+//     pageYOffset = window.pageYOffset;
+//     modal.classList.add('icon-color-picker__is-open');
+//     isModalOpen = true;
+//     document.querySelector('body').classList.add('stop-scrolling')
+//     document.querySelector('html').classList.add('stop-scrolling')
+//   }
 
-  let closeModal = function () {
-    modal.classList.remove('icon-color-picker__is-open');
-    isModalOpen = false;
-    document.querySelector('body').classList.remove('stop-scrolling')
-    document.querySelector('html').classList.remove('stop-scrolling')
-  }
+//   let closeModal = function () {
+//     modal.classList.remove('icon-color-picker__is-open');
+//     isModalOpen = false;
+//     document.querySelector('body').classList.remove('stop-scrolling')
+//     document.querySelector('html').classList.remove('stop-scrolling')
+//   }
 
-  // let onScroll = function(e) {
-  //   if (isModalOpen) {
-  //     e.preventDefault();
-  //     window.scrollTo(0, pageYOffset);
-  //   }
-  // }
+//   // let onScroll = function(e) {
+//   //   if (isModalOpen) {
+//   //     e.preventDefault();
+//   //     window.scrollTo(0, pageYOffset);
+//   //   }
+//   // }
 
-  modalTriggers.forEach(function (item) {
-    item.addEventListener('click', openModal);
-  })
+//   modalTriggers.forEach(function (item) {
+//     item.addEventListener('click', openModal);
+//   })
 
-  //document.addEventListener('scroll', onScroll);
-  document.querySelector('.icon-color-picker__modal-container').addEventListener('click', e => {
-    console.log(e.target.classList)
-    closeModal()
-  });
-  //closeButton.addEventListener('click', closeModal);
-})();
+//   //document.addEventListener('scroll', onScroll);
+//   document.querySelector('.icon-color-picker__modal-container').addEventListener('click', e => {
+//     console.log(e.target.classList)
+//     closeModal()
+//   });
+//   //closeButton.addEventListener('click', closeModal);
+// })();
