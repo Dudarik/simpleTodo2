@@ -69,7 +69,14 @@
     background-color: rgba($color: #fff, $alpha: .7);
     border-radius: 1rem;
     padding: 0.5rem;
+  }
 
+  .todolist__item-text-editor{
+    font-size: 1.4rem;
+    // font-weight: bold;
+    background-color: rgba($color: #fff, $alpha: .7);
+    border-radius: 1rem;
+    padding: 0.5rem;
   }
 
   .todolist__datetime-wrappaer{

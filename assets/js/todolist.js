@@ -131,12 +131,20 @@ class TodoList {
     this.setIconColorButton(this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor)
 
     let addButton = document.querySelector('#addButton')
+    let inputTodo = document.querySelector('#inputTodo')
 
     addButton.addEventListener('click', () => {
 
       this.addTodoListItem(this.createListItem())
 
     })
+
+    inputTodo.addEventListener('keyup', event => {
+
+      if (event.code === 'Enter') this.addTodoListItem(this.createListItem())
+
+    })
+
 
     let output = document.querySelector(this.todoListSettings.outputID)
 
@@ -160,10 +168,21 @@ class TodoList {
 
         case 'edit-button':
           console.log('press edit button', itemID)
+          let textItem = currentElement.closest('li').querySelector('.todolist__item-text')
+          this.editListItem(textItem, itemID)
           break;
 
         case 'icon-item':
           console.log('press icon-item button', itemID)
+          if (this.getItemFromItemsArray(itemID).checkedItem) {
+            this.uncheckedListItem(itemID)
+            return
+          }
+          this.checkedListItem(itemID)
+          break;
+
+        case 'item-text':
+          console.log('press item text')
           break;
 
         default:
@@ -171,6 +190,88 @@ class TodoList {
           break;
       }
     })
+
+    output.addEventListener('dblclick', event => {
+      let currentElement = event.target
+
+      if (currentElement.tagName == 'I') currentElement = event.target.parentElement
+
+      let currentElementID = currentElement.getAttribute('id')
+
+      let itemID = currentElement.closest('li').getAttribute('data-ItemID')
+
+      switch (currentElementID) {
+        case 'item-text':
+          console.log('press item-text-edit button', itemID)
+          let textItem = currentElement.closest('li').querySelector('.todolist__item-text')
+          this.editListItem(textItem, itemID)
+          break;
+        default:
+          console.log('press unknown button', itemID)
+          break;
+      }
+    })
+  }
+
+  uncheckedListItem(itemID) {
+    let todoListItem = this.getItemFromItemsArray(itemID)
+
+    if (!todoListItem) {
+      console.log(new Error('Невозможно отредактировать элемент uncheckListItem()'))
+      return
+    }
+
+    todoListItem.checkedItem = false
+
+    this.saveListToDB(todoListItem).then(this.renderList(this.todoListItems))
+  }
+
+  checkedListItem(itemID) {
+    let todoListItem = this.getItemFromItemsArray(itemID)
+
+    if (!todoListItem) {
+      console.log(new Error('Невозможно отредактировать элемент checkListItem()'))
+      return
+    }
+
+    todoListItem.checkedItem = true
+
+    this.saveListToDB(todoListItem).then(this.renderList(this.todoListItems))
+  }
+
+  editListItem(elem, itemID) {
+
+    let ta = document.createElement('textarea')
+
+    ta.classList.add('todolist__item-text-editor')
+
+    ta.value = elem.innerHTML
+
+    ta.addEventListener('keyup', ev => {
+      if (ev.key == 'Enter') {
+        ta.blur()
+      }
+    })
+
+    let endEdit = (elem, ta) => {
+      let todoListItem = this.getItemFromItemsArray(itemID)
+      if (!todoListItem) {
+        console.log(new Error('Невозможно отредактировать элемент'))
+        return
+      }
+      todoListItem.itemText = ta.value
+      elem.innerHTML = ta.value
+
+      this.saveListToDB(todoListItem)
+      ta.replaceWith(elem)
+    }
+
+    ta.addEventListener('blur', () => {
+      endEdit(elem, ta)
+    })
+
+    elem.replaceWith(ta)
+    ta.focus()
   }
 
   addTodoListItem(todoListItem) {
@@ -357,7 +458,8 @@ class TodoList {
           let request = objStore.put(todoListItem)
 
           request.onsuccess = event => {
-            this.todoListItems.push(todoListItem)
+            this.todoListItems = this.loadListFromDB()
+            // this.todoListItems.push(todoListItem)
             rs(this.todoListItems)
           }
 
@@ -470,6 +572,15 @@ class TodoList {
       // console.log(listItems[i], listItems.length,i)
 
       li.setAttribute('data-itemID', listItems[i].itemID)
+
+      if (listItems[i].checkedItem) {
+        li.classList.add('checked')
+        let checkedIcon = document.createElement('i')
+        checkedIcon.classList.add('check')
+        checkedIcon.classList.add('fas')
+        checkedIcon.classList.add('fa-check')
+        iconDiv.appendChild(checkedIcon)
+      }
 
       iconDiv.classList.add(itemIconsColors[listItems[i].itemIconColor])
 
@@ -586,10 +697,10 @@ class TodoList {
       color.classList.add('fas')
       color.classList.add('fa-fill-drip')
       color.classList.add(itemIconsColors[i])
-      
+
 
       color.setAttribute('data-icon-color-id', Object.keys(itemIconsColors)[i])
-      
+
       if (i == this.todoListSettings.lastIconColor) color.classList.add('icon-color__active')
 
       colors.appendChild(color)
@@ -607,14 +718,14 @@ class TodoList {
     })
 
     colors.addEventListener('click', event => {
-      console.log(event.target)
+      // console.log(event.target)
       console.log(this.todoListSettings.lastIconColor)
       if (currentIconColor[1] != this.todoListSettings.lastIconColor) colors.querySelector(`[data-icon-color-id="${currentIconColor[1]}"]`).classList.remove('icon-color__active')
 
       currentIconColor[1] = event.target.getAttribute('data-icon-color-id')
-      colors.querySelector(`[data-icon-color-id="${this.todoListSettings.lastIconColor}"]`).classList.remove('icon-color__active')      
+      colors.querySelector(`[data-icon-color-id="${this.todoListSettings.lastIconColor}"]`).classList.remove('icon-color__active')
       event.target.classList.add('icon-color__active')
-    })    
+    })
 
     let openModal = () => {
       pageYOffset = window.pageYOffset;
@@ -626,14 +737,14 @@ class TodoList {
 
     let cancelModal = () => {
       // currentIconColor = [-1, -1]
-      if(currentIconColor[0] != this.todoListSettings.lastIcon){
+      if (currentIconColor[0] != this.todoListSettings.lastIcon) {
         icons.querySelector(`[data-icon-id="${currentIconColor[0]}"]`).classList.remove('icon__active')
         icons.querySelector(`[data-icon-id="${this.todoListSettings.lastIcon}"]`).classList.add('icon__active')
       }
 
-      if(currentIconColor[1] != this.todoListSettings.lastIconColor){
+      if (currentIconColor[1] != this.todoListSettings.lastIconColor) {
         colors.querySelector(`[data-icon-color-id="${currentIconColor[1]}"]`).classList.remove('icon-color__active')
-        colors.querySelector(`[data-icon-color-id="${this.todoListSettings.lastIconColor}"]`).classList.add('icon-color__active')  
+        colors.querySelector(`[data-icon-color-id="${this.todoListSettings.lastIconColor}"]`).classList.add('icon-color__active')
       }
       modal.classList.remove('icon-color-picker__is-open');
       isModalOpen = false;
@@ -643,12 +754,12 @@ class TodoList {
 
     let exitAndSaveModal = () => {
       this.todoListSettings.lastIcon = currentIconColor[0]
-      this.todoListSettings.lastIconColor = currentIconColor[1]      
+      this.todoListSettings.lastIconColor = currentIconColor[1]
 
       this.setIconColorButton(this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor)
 
       this.saveSettingsToLocalStorage()
-      
+
       cancelModal()
     }
 

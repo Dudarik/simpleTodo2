@@ -477,6 +477,13 @@ body {
   padding: 0.5rem;
 }
 
+.todolist__item .todolist__item-text-editor {
+  font-size: 1.4rem;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 1rem;
+  padding: 0.5rem;
+}
+
 .todolist__item .todolist__datetime-wrappaer {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -579,6 +586,9 @@ body {
     margin-right: 1rem;
     margin-left: 5.5rem;
     font-size: 1.3rem;
+  }
+  .todolist__item .todolist__item-text-editor {
+    margin-left: 6rem;
   }
   .todolist__item .todolist__datetime-wrappaer {
     margin-left: auto;
