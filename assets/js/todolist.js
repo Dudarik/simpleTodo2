@@ -776,16 +776,6 @@ class TodoList {
   }
 }
 
-// const addButton = document.querySelector('#todolistform #addButton')
-
-// addButton.addEventListener('click', () => {
-//   let inputValue = document.querySelector('#inputTodo')
-//   // let listIconItem = document.querySelector('#listIconItem')
-//   myTodo.addListItem(new TodoListItem(inputValue.value, listIconItem.value))
-//   inputValue.value = ''
-// })
-
-
 // ***************************************tests***************************************
 
 // indexedDB.deleteDatabase('todoListDB')
@@ -795,48 +785,3 @@ let tdl = new TodoList(defaultSettings);
 
 
 // ***************************************tests***************************************
-
-
-
-
-// (function () {
-//   let modal = document.querySelector('.icon-color-picker__modal-container');
-//   // let closeButton = document.querySelector('.icon-color-picker__close-button ');
-//   let modalTriggers = document.querySelectorAll('[data-trigger]');
-
-//   let isModalOpen = false;
-//   let pageYOffset = 0;
-
-//   let openModal = function () {
-//     pageYOffset = window.pageYOffset;
-//     modal.classList.add('icon-color-picker__is-open');
-//     isModalOpen = true;
-//     document.querySelector('body').classList.add('stop-scrolling')
-//     document.querySelector('html').classList.add('stop-scrolling')
-//   }
-
-//   let closeModal = function () {
-//     modal.classList.remove('icon-color-picker__is-open');
-//     isModalOpen = false;
-//     document.querySelector('body').classList.remove('stop-scrolling')
-//     document.querySelector('html').classList.remove('stop-scrolling')
-//   }
-
-//   // let onScroll = function(e) {
-//   //   if (isModalOpen) {
-//   //     e.preventDefault();
-//   //     window.scrollTo(0, pageYOffset);
-//   //   }
-//   // }
-
-//   modalTriggers.forEach(function (item) {
-//     item.addEventListener('click', openModal);
-//   })
-
-//   //document.addEventListener('scroll', onScroll);
-//   document.querySelector('.icon-color-picker__modal-container').addEventListener('click', e => {
-//     console.log(e.target.classList)
-//     closeModal()
-//   });
-//   //closeButton.addEventListener('click', closeModal);
-// })();

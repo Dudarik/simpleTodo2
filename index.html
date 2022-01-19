@@ -8,45 +8,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./assets/css/styles.css">
 
-  
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"> -->
-  <title>Document</title>
+  <title>Simple Todo List v2</title>
 </head>
 
 <body>
 
   <div class="icon-color-picker__modal-container">
     <div class="icon-color-picker__modal-content">
-      <!-- <button class="icon-color-picker__close-button">x</button> -->
 
-      	<div class="icon-color-picker__icons">
-          <!-- <i class="far fa-edit icon__active"></i>
-          <i class="far fa-grin"></i>
-          <i class="fas fa-address-book"></i>
-          <i class="fas fa-archive"></i>
-          <i class="fas fa-glass-cheers"></i>
-          <i class="fas fa-cash-register"></i>          
-          <i class="fas fa-paw"></i>
-          <i class="far fa-envelope"></i>
-          <i class="fab fa-connectdevelop"></i>
-          <i class="fas fa-bicycle"></i>
-          <i class="fas fa-bus"></i>
-          <i class="fas fa-car-side"></i>
-          <i class="fas fa-dragon"></i> 
-          <i class="fas fa-child"></i>
-          <i class="fas fa-laptop"></i>
-          <i class="fab fa-accusoft"></i> -->
-        </div>
-        <div class="icon-color-picker__colors">
-          <!-- <i class="fas fa-fill-drip icon-item__color-0 icon-color__active"></i>
-          <i class="fas fa-fill-drip icon-item__color-1"></i>
-          <i class="fas fa-fill-drip icon-item__color-2"></i>
-          <i class="fas fa-fill-drip icon-item__color-3"></i> -->
-        </div>
-        <div class="icon-color-picker__buttons">
-          <button id="icon-color-picker__cancel-button" class="inputdata__button icon-color-picker__cancel-button"><i id="icon-color-picker_cbi" class="fas fa-ban"></i></button>
-          <button id="icon-color-picker__ok-button" class="inputdata__button icon-color-picker__ok-button"><i id="icon-color-picker_obi" class="far fa-check-circle"></i></button>
-        </div>
+      <div class="icon-color-picker__icons">
+      </div>
+
+      <div class="icon-color-picker__colors">
+      </div>
+
+      <div class="icon-color-picker__buttons">
+        <button id="icon-color-picker__cancel-button" class="inputdata__button icon-color-picker__cancel-button"><i
+            id="icon-color-picker_cbi" class="fas fa-ban"></i></button>
+        <button id="icon-color-picker__ok-button" class="inputdata__button icon-color-picker__ok-button"><i
+            id="icon-color-picker_obi" class="far fa-check-circle"></i></button>
+      </div>
 
     </div>
   </div>
@@ -54,109 +35,48 @@
   <div class="container">
     <div id="todolist" class="todolist">
       <div id="todolistform" class="todolist-form">
-        <!-- <input type="color" id="head" name="head" class="colorpicker" value="#9688cf"> -->
+        
         <h2 class="todolist-form__logo">Мой ТуДу лист :)</h2>
         <div class="todolist-form__inputdata">
-<!-- Delete -->
-        <button id="icon-color-picker-button" class="inputdata__button icon-color-picker__button" data-item-icon="" data-item-icon-color="" data-trigger>
-          <div class="save-button-icon">
-            <i class="far fa-grin"></i>
-          </div>
-        </button>
-
-          <!-- <label class="custom-select mr-ld-1">
-            <select class="inputdata__icon-items" id="listIconItem">
-              <option value="0" class="inputdata__icon-item">&#xf79f;</option>
-              <option value="1" selected>&#128579;</option>
-              <option value="2">&#129488;</option>
-              <option value="3">&#129326;</option>
-              <option value="4">🙈</option>
-            </select>
-          </label> -->
-
-          <input type="text" id="inputTodo" class="text-input inputdata__text-input mt-sd-1 mr-ld-1" placeholder="Введите текст">
-
-          <button id="addButton" class="inputdata__button mt-sd-1 mr-ld-1">
+        
+          <button id="icon-color-picker-button" class="inputdata__button icon-color-picker__button" data-item-icon=""
+            data-item-icon-color="" data-trigger>
             <div class="save-button-icon">
-              <i class="fa fa-floppy-o"></i>
+              <i class="far fa-grin"></i>
             </div>
           </button>
 
-          <!-- <div class="button">
-            <div class="icon">
-              <i class="fa fa-floppy-o"></i>
-            </div>
-          </div> -->
+          <input type="text" id="inputTodo" class="text-input inputdata__text-input mt-sd-1 mr-ld-1"
+            placeholder="Введите текст">
+          <div class="todolist__control-buttons">
+            <button id="addButton" class="inputdata__button mt-sd-1 mr-ld-1">
+              <div class="save-button-icon">
+                <i class="fa fa-floppy-o"></i>
+              </div>
+            </button>
+  
+            <button id="addButton" class="inputdata__button settings__button">
+              
+              <i class="fas fa-cog"></i>
+              
+            </button>
+          </div>
+          
 
+        </div>
+
+        <div class="todolist-settings">
+          
         </div>
       </div>
 
       <div id="list">
         <ul id="listOutput" class="tododlist__output">
-<!-- 
-          <li data-ItemID="4234124124312" class="todolist__item checked">
-            <div dataTodoListIconIDX="" class="icon-item icon-item__color-1"><i class="fas fa-glass-cheers"></i><i id="check" class="check fas fa-check"></i></div>
-            <h3 class="todolist__item-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem consectetur labore iste eius quam ullam modi earum amet voluptas beatae quasi officia harum obcaecati, explicabo expedita sapiente ut itaque suscipit?</h3>
-            <div class="todolist__datetime-wrappaer">
-              <h4 class="todolist__item-date">01.01.2021</h4>
-            </div>
-            <div class="control-buttons__wrapper">
-              <div id="delete-button" class="button delete-button"><i class="fas fa-times-circle"></i></div>
-              <div id="edit-button"class="button edit-button"><i class="fas fa-pencil-alt"></i></div>
-          </li>
-
-          <li dataTodoListItemID="" class="todolist__item checked">
-            <div dataTodoListIconIDX="" class="icon-item icon-item__color-2"><i class="fas fa-cash-register"></i><i id="check" class="check fas fa-check"></i></div>
-            <h3 class="todolist__item-text">Сделать какую-нибдудь хренотень</h3>
-            <div class="todolist__datetime-wrappaer">
-              <h4 class="todolist__item-date">01.01.2021</h4>
-            </div>
-            <div class="control-buttons__wrapper">
-              <div class="button delete-button"><i class="fas fa-times-circle"></i></div>
-              <div class="button edit-button"><i class="fas fa-pencil-alt"></i></div>
-          </li>
-
-          <li dataTodoListItemID="" class="todolist__item">
-            <div dataTodoListIconIDX="" class="icon-item"><i class="far fa-money-bill-alt"></i></div>
-            <h3 class="todolist__item-text">Ограбить банк</h3>
-            <div class="todolist__datetime-wrappaer">
-              <h4 class="todolist__item-date">01.01.2021</h4>
-            </div>
-            <div class="control-buttons__wrapper">
-              <div class="button delete-button"><i class="fas fa-times-circle"></i></div>
-              <div class="button edit-button"><i class="fas fa-pencil-alt"></i></div>
-          </li>
-
-          <li dataTodoListItemID="" class="todolist__item">
-            <div dataTodoListIconIDX="" class="icon-item"><i class="far fa-money-bill-alt"></i></div>
-            <h3 class="todolist__item-text">Купить всем подарки</h3>
-            <div class="todolist__datetime-wrappaer">
-              <h4 class="todolist__item-date">01.01.2021</h4>
-            </div>
-            <div class="control-buttons__wrapper">
-              <div class="button delete-button"><i class="fas fa-times-circle"></i></div>
-              <div class="button edit-button"><i class="fas fa-pencil-alt"></i></div>
-          </li>
-
-          <li dataTodoListItemID="" class="todolist__item">
-            <div dataTodoListIconIDX="" class="icon-item"><i class="far fa-money-bill-alt"></i></div>
-            <h3 class="todolist__item-text">Найти денег</h3>
-            <div class="todolist__datetime-wrappaer">
-              <h4 class="todolist__item-date">01.01.2021</h4>
-            </div>
-            <div class="control-buttons__wrapper">
-              <div class="button delete-button"><i class="fas fa-times-circle"></i></div>
-              <div class="button edit-button"><i class="fas fa-pencil-alt"></i></div>
-          </li> -->
-
         </ul>
       </div>
     </div>
   </div>
 
-  <template id="tmpl_listIconItem">
-    <i></i>
-  </template>
   <template id="tmpl_listOutput">
 
     <li data-ItemID="" class="todolist__item">
@@ -171,14 +91,15 @@
     </li>
 
   </template>
+
   <div class="debug">
-    
-    <!-- fa-cash-register -->
+
   </div>
 
   <div class="cssdebug">
 
-  </div>  
+  </div>
+
   <script src="./assets/js/todolist.js"></script>
 </body>
 
