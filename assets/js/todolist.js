@@ -1,4 +1,8 @@
-let itemIconsObj = {
+let itemIconIonic = {
+
+}
+
+let itemIconsFA = {
   0: 'far fa-edit',
   1: 'far fa-grin',
   2: 'fas fa-address-book',
@@ -77,6 +81,13 @@ class TodoList {
       this.createDB()
     }
 
+    this.filters = {      
+      i: 'itemIcon',
+      ic: 'itemIconColor',
+      dt: 'itemDateTime',
+      ci: 'checkedItem'
+    }
+
     this.todoListItems = []
 
     this.todoListInit()
@@ -92,6 +103,19 @@ class TodoList {
     inputValue.value = ''
 
     return listItem
+  }
+
+  filterList(filters, filterValue){
+    // [[i, [1,3,5,6]], [ic, [1,3]], [dt, [startDate, endDate]], [ci, [true]]]
+    
+    return this.todoListItems.filter(item => item[filters] === filterValue)
+    
+  }
+
+  sortList(){
+    let todoListSorted = []
+
+    return todoListSorted
   }
 
   setIconColorButton(iconID, colorID) {
@@ -114,7 +138,7 @@ class TodoList {
     let icon_i = icon.querySelector('i')
 
     icon_i.removeAttribute('class')
-    let iconClasses = itemIconsObj[iconID].split(' ')
+    let iconClasses = itemIconsFA[iconID].split(' ')
 
     for (let i = 0; i < iconClasses.length; i++) {
       icon_i.classList.add(iconClasses[i])
@@ -127,6 +151,8 @@ class TodoList {
     this.iconColorPickerModal()
 
     this.loadListFromDB().then(rs => this.renderList(this.todoListItems))
+
+    // this.loadListFromDB().then(rs => this.renderList(this.filterList(this.filters.i, 2)))
 
     this.setIconColorButton(this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor)
 
@@ -584,7 +610,7 @@ class TodoList {
 
       iconDiv.classList.add(itemIconsColors[listItems[i].itemIconColor])
 
-      let iconClassArray = itemIconsObj[listItems[i].itemIcon].split(' ')
+      let iconClassArray = itemIconsFA[listItems[i].itemIcon].split(' ')
 
       for (let i = 0; i < iconClassArray.length; i++) {
         iconItem.classList.add(iconClassArray[i])
@@ -660,6 +686,14 @@ class TodoList {
     return d.slice(0, 3).join('.') + ' ' + d.slice(3).join(':');
   }
 
+  iconColorPickerModalWindow(){
+    let options = {}
+
+    let modal = new t.modal(options)
+
+    modal.open()
+  }
+
   iconColorPickerModal() {
     let modal = document.querySelector('.icon-color-picker__modal-container');
     // let closeButton = document.querySelector('.icon-color-picker__close-button ');
@@ -673,12 +707,12 @@ class TodoList {
 
     let currentIconColor = [this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor]
 
-    for (let i = 0; i < Object.keys(itemIconsObj).length; i++) {
+    for (let i = 0; i < Object.keys(itemIconsFA).length; i++) {
 
       let icon = document.createElement('i')
-      let cl = itemIconsObj[i].split(' ')
+      let cl = itemIconsFA[i].split(' ')
 
-      icon.setAttribute('data-icon-id', Object.keys(itemIconsObj)[i])
+      icon.setAttribute('data-icon-id', Object.keys(itemIconsFA)[i])
 
       for (let j = 0; j < cl.length; j++) {
 
@@ -779,8 +813,47 @@ class TodoList {
 // ***************************************tests***************************************
 
 // indexedDB.deleteDatabase('todoListDB')
-
+console.time()
 let tdl = new TodoList(defaultSettings);
+
+let options = {
+  title: 'Выбери иконку и цвет', 
+  modalOverlayClose: false,
+  picker: true,
+  multiPicker: true,
+  footerButtons: [
+    {type: 'ok', handler(){
+      console.log('ok button press')
+    }},
+    {type: 'cancel', handler(){
+      console.log('cancel button press')
+    }},
+  ],
+  objToRender: {}
+}
+
+let b = document.createElement('button')
+b.innerHTML = 'press'
+
+b.addEventListener('click', () => {
+  
+  console.log('cliked')
+})
+// console.log(b)
+
+options.content = b
+
+let modal = new t.modal(options)
+
+
+// modal.open()
+
+// setTimeout(() => {
+//   modal.close()
+// }, 2000)
+
+console.timeEnd()
+
 // console.log(tdl);
 
 

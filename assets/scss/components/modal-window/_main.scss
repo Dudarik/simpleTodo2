@@ -1,0 +1,37 @@
+.modal-overlay, .modal-window{
+  opacity: 0;
+  z-index: -1;
+}
+
+.tmodal-modal{
+  &.modal__open{
+    .modal-window{
+      transform: translateY(1rem);
+    }
+
+    .modal-overlay{
+      background-color: rgba($color: #000000, $alpha: .5);
+    }
+
+    .modal-overlay, .modal-window{
+      opacity: 1;
+      z-index: 1000;
+    }
+  }
+
+  &.modal__hiding{
+    .modal-overlay, .modal-window{
+      opacity: 1;
+      z-index: 1000;
+    }
+
+    .modal-window{
+      transform: translateY(-200px);
+    }
+
+    .modal-overlay{
+      background-color: rgba($color: #000000, $alpha: 0);
+    }
+
+  }
+}

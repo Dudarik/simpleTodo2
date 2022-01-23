@@ -13,6 +13,37 @@
 
 <body>
 
+  <!-- <div class="tmodal-modal">
+    <div class="modal-overlay">
+
+      <div class="modal-window">
+
+        <div class="modal-header">
+
+          <span class="modal-title">Modal title</span>
+          
+        </div>
+
+        <div class="modal-body">
+          lorem100
+        </div>
+
+        <div class="modal-footer">
+
+          <div class="modal-window__buttons">
+            <button id="modal-window__cancel-button" class="inputdata__button modal-window__cancel-button"><i
+                id="modal-window_cbi" class="fas fa-ban"></i></button>
+            <button id="modal-window__ok-button" class="inputdata__button modal-window__ok-button"><i
+                id="modal-window_obi" class="far fa-check-circle"></i></button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div> -->
+
   <div class="icon-color-picker__modal-container">
     <div class="icon-color-picker__modal-content">
 
@@ -55,18 +86,18 @@
               </div>
             </button>
   
-            <button id="addButton" class="inputdata__button settings__button">
+            <!-- <button id="addButton" class="inputdata__button settings__button">
               
               <i class="fas fa-cog"></i>
               
-            </button>
+            </button> -->
           </div>
           
 
         </div>
 
         <div class="todolist-settings">
-          
+          <i class="fas fa-angle-double-down"></i>
         </div>
       </div>
 
@@ -92,6 +123,45 @@
 
   </template>
 
+  <template id="tmpl_modal-window">
+    <div id="tmodal-modal" class="tmodal-modal">
+      <div id="modal-overlay" class="modal-overlay">
+  
+        <div class="modal-window">
+  
+          <div id="modal-header" class="modal-header">
+  
+            <span id="modal-title" class="modal-title">Modal title</span>
+            
+          </div>
+  
+          <div id="modal-body" class="modal-body">
+            lorem100
+          </div>
+  
+          <div id="modal-footer" class="modal-footer">  
+          </div>
+  
+        </div>
+  
+      </div>
+    </div>
+  </template>
+
+  <template id="tmpl_modal-window__buttons">
+    <div id="modal-window__buttons" class="modal-window__buttons">
+    </div>
+  </template>
+
+  <template id="tmpl_modal-window__button_ok">
+    <button class="inputdata__button modal-window__ok-button"><i id="modal-window_obi" class="far fa-check-circle"></i></button>
+  </template>
+
+  <template id="tmpl_modal-window__button_cancel">
+    <button class="inputdata__button modal-window__cancel-button"><i id="modal-window_cbi" class="fas fa-ban"></i></button>
+  </template>
+
+
   <div class="debug">
 
   </div>
@@ -99,7 +169,8 @@
   <div class="cssdebug">
 
   </div>
-
+  <script src="./assets/js/plugins/base.js"></script>
+  <script src="./assets/js/plugins/modal-window/modal.js"></script>
   <script src="./assets/js/todolist.js"></script>
 </body>
 

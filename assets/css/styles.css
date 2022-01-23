@@ -337,7 +337,7 @@ body {
 .icon-color-picker__is-open {
   opacity: 1;
   pointer-events: all;
-  z-index: 10000;
+  z-index: 100;
   background-color: rgba(0, 0, 0, 0.5);
   -webkit-transition: opacity .3s, background-color .5s;
   transition: opacity .3s, background-color .5s;
@@ -534,6 +534,142 @@ body {
   transition: 0.5s all;
 }
 
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  -webkit-transition: background-color .4s ease-in;
+  transition: background-color .4s ease-in;
+}
+
+.modal-window {
+  overflow-y: auto;
+  max-width: 500px;
+  max-height: 460px;
+  padding: .5rem;
+  padding-top: 0;
+  background-color: #fff;
+  border-radius: .3rem;
+  margin: 0 auto;
+  -webkit-transform: translateY(-200px);
+          transform: translateY(-200px);
+  -webkit-transition: -webkit-transform ease-out .3s;
+  transition: -webkit-transform ease-out .3s;
+  transition: transform ease-out .3s;
+  transition: transform ease-out .3s, -webkit-transform ease-out .3s;
+}
+
+.modal-header {
+  border-bottom: 1px solid #eee;
+  padding: .3rem .4rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+}
+
+.modal-body {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid #eee;
+}
+
+.modal-window__buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding-top: .5rem;
+  padding-bottom: 0;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.modal-window__buttons i {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 2.4rem;
+  color: white;
+}
+
+.modal-window__single-button {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.modal-window__cancel-button {
+  background-color: #f55b5b;
+}
+
+.modal-window__ok-button {
+  background-color: var(--mainbg-color);
+}
+
+.modal-window__cancel-button:hover i {
+  -webkit-transition: .5s color;
+  transition: .5s color;
+  color: #f55b5b;
+}
+
+.modal-window__ok-button:hover i {
+  -webkit-transition: .5s color;
+  transition: .5s color;
+  color: var(--mainbg-color);
+}
+
+.modal-overlay, .modal-window {
+  opacity: 0;
+  z-index: -1;
+}
+
+.tmodal-modal.modal__open .modal-window {
+  -webkit-transform: translateY(1rem);
+          transform: translateY(1rem);
+}
+
+.tmodal-modal.modal__open .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.tmodal-modal.modal__open .modal-overlay, .tmodal-modal.modal__open .modal-window {
+  opacity: 1;
+  z-index: 1000;
+}
+
+.tmodal-modal.modal__hiding .modal-overlay, .tmodal-modal.modal__hiding .modal-window {
+  opacity: 1;
+  z-index: 1000;
+}
+
+.tmodal-modal.modal__hiding .modal-window {
+  -webkit-transform: translateY(-200px);
+          transform: translateY(-200px);
+}
+
+.tmodal-modal.modal__hiding .modal-overlay {
+  background-color: rgba(0, 0, 0, 0);
+}
+
 @media (max-width: 767px) {
   .mr-ld-1 {
     margin-right: 0 !important;
@@ -606,6 +742,9 @@ body {
     -webkit-box-direction: reverse;
         -ms-flex-direction: row-reverse;
             flex-direction: row-reverse;
+  }
+  .modal-window__buttons i {
+    font-size: 2rem;
   }
 }
 

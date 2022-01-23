@@ -73,6 +73,12 @@
       flex-direction: row-reverse;
     }
   }
+
+  .modal-window__buttons{
+    i{
+      font-size: 2rem;
+    }
+  }
 }
 
 @media (min-width: 991px) {
