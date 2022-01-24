@@ -549,14 +549,14 @@ body {
 .modal-window {
   overflow-y: auto;
   max-width: 500px;
-  max-height: 460px;
+  max-height: 560px;
   padding: .5rem;
   padding-top: 0;
   background-color: #fff;
   border-radius: .3rem;
   margin: 0 auto;
-  -webkit-transform: translateY(-200px);
-          transform: translateY(-200px);
+  -webkit-transform: translateY(-600px);
+          transform: translateY(-600px);
   -webkit-transition: -webkit-transform ease-out .3s;
   transition: -webkit-transform ease-out .3s;
   transition: transform ease-out .3s;
@@ -575,10 +575,6 @@ body {
 .modal-body {
   padding-top: .5rem;
   padding-bottom: .5rem;
-}
-
-.modal-footer {
-  border-top: 1px solid #eee;
 }
 
 .modal-window__buttons {
@@ -662,8 +658,8 @@ body {
 }
 
 .tmodal-modal.modal__hiding .modal-window {
-  -webkit-transform: translateY(-200px);
-          transform: translateY(-200px);
+  -webkit-transform: translateY(-600px);
+          transform: translateY(-600px);
 }
 
 .tmodal-modal.modal__hiding .modal-overlay {

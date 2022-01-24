@@ -21,10 +21,10 @@ t.modal = function(options){
       if (button.type == 'cancel'){
         b = document.querySelector('#tmpl_modal-window__button_cancel').content.cloneNode(true).querySelector('.modal-window__cancel-button')
       }
-      console.log(b)
+      
       b.addEventListener('click', button.handler)
 
-      $buttons.insertAdjacentElement('afterbegin', b) // += b
+      $buttons.insertAdjacentElement('afterbegin', b)
     })
 
     return $buttons
@@ -38,9 +38,14 @@ t.modal = function(options){
     
     modal.querySelector('.modal-title').innerHTML = options.title
 
-    console.log(options.content)
-
-    modal.querySelector('.modal-body').insertAdjacentElement('afterbegin', options.content || 'no content to display')
+    if (Array.isArray(options.content)){
+      options.content.forEach(element => {
+        modal.querySelector('.modal-body').insertAdjacentElement('beforeend', element || 'no content to display')    
+      });
+    }
+    else{
+      modal.querySelector('.modal-body').insertAdjacentElement('afterbegin', options.content || 'no content to display')
+    }   
 
     modal.querySelector('#modal-footer').insertAdjacentElement('afterbegin',_createModalButtons(options.footerButtons))
 
@@ -52,6 +57,7 @@ t.modal = function(options){
   const $modal = _createModal(options)
   const ANIMATION_SPEED = 300
 
+
   let closing = false
   let destroyed = false
 
@@ -59,8 +65,14 @@ t.modal = function(options){
     open(){
       if (destroyed) return
       !closing && $modal.classList.add('modal__open')
+
+      if (options.modalOverlayClose) $modal.querySelector('#modal-overlay').addEventListener('click', event => {
+        if (event.target.dataset.closable) modal.close()
+      })
+
+      document.querySelector('body').classList.add('stop-scrolling')
+      document.querySelector('html').classList.add('stop-scrolling')
     },
-    saveData(){},
 
     close(){
       closing = true
@@ -69,7 +81,11 @@ t.modal = function(options){
       setTimeout(() => {
         $modal.classList.remove('modal__hiding')
         closing = false
-      }, ANIMATION_SPEED);      
+
+        document.querySelector('body').classList.remove('stop-scrolling')
+        document.querySelector('html').classList.remove('stop-scrolling')
+        modal.destroy()
+      }, ANIMATION_SPEED);
     },    
   }
 
@@ -86,6 +102,7 @@ t.modal = function(options){
       $modal.removeEventListener('click', closeListener)
       destroyed = true
     },
+    
     setContent(html){
       $modal.querySelector('#modal-body').innerHTML = html
     }
