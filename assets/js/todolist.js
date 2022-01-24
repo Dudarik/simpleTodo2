@@ -687,11 +687,38 @@ class TodoList {
   }
 
   iconColorPickerModalWindow(){
-    let options = {}
+    let options = {
+      title: 'Выбери иконку и цвет', 
+      modalOverlayClose: false,
+      picker: true,
+      multiPicker: true,
+      footerButtons: [
+        {type: 'ok', handler(){
+          console.log('ok button press')
+          modal.close()
+        }},
+        {type: 'cancel', handler(){
+          console.log('cancel button press')
+          console.log(this)
+          modal.close()
+        }},
+      ],
+      content:''
+    }
+
+    
+    
+    let b = document.createElement('button')
+    b.innerHTML = 'press'
+    
+    b.addEventListener('click', () => {
+      
+      console.log('cliked')
+    })
+
+    options.content = b
 
     let modal = new t.modal(options)
-
-    modal.open()
   }
 
   iconColorPickerModal() {
@@ -815,36 +842,6 @@ class TodoList {
 // indexedDB.deleteDatabase('todoListDB')
 console.time()
 let tdl = new TodoList(defaultSettings);
-
-let options = {
-  title: 'Выбери иконку и цвет', 
-  modalOverlayClose: false,
-  picker: true,
-  multiPicker: true,
-  footerButtons: [
-    {type: 'ok', handler(){
-      console.log('ok button press')
-    }},
-    {type: 'cancel', handler(){
-      console.log('cancel button press')
-    }},
-  ],
-  objToRender: {}
-}
-
-let b = document.createElement('button')
-b.innerHTML = 'press'
-
-b.addEventListener('click', () => {
-  
-  console.log('cliked')
-})
-// console.log(b)
-
-options.content = b
-
-let modal = new t.modal(options)
-
 
 // modal.open()
 

@@ -38,7 +38,9 @@ t.modal = function(options){
     
     modal.querySelector('.modal-title').innerHTML = options.title
 
-    modal.querySelector('.modal-body').insertAdjacentHTML('afterbegin', options.content || 'no content to display')
+    console.log(options.content)
+
+    modal.querySelector('.modal-body').insertAdjacentElement('afterbegin', options.content || 'no content to display')
 
     modal.querySelector('#modal-footer').insertAdjacentElement('afterbegin',_createModalButtons(options.footerButtons))
 
