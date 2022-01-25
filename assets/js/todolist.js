@@ -36,8 +36,16 @@ let defaultSettings = {
   dbCreated: false,
   outputTemplateID: '#tmpl_listOutput',
   outputID: '#listOutput',
+
   lastIcon: 0,
   lastIconColor: 0,
+
+  sortSave: false, 
+  sortField: 'ci',
+  sortUpDown: 'down',
+
+  settingsVersion: 1,
+
   DB_NAME: 'todoListDB',
   DB_VERSION: 1,
   DB_STORE_NAME: 'todoListItems',
@@ -64,9 +72,14 @@ class ItemTodoList {
 class TodoList {
 
   constructor(settings) {
-
+    
     if (localStorage.todoListSettings) {
       this.todoListSettings = this.loadSettingsFromLocalStorage()
+
+      if (this.todoListSettings.settingsVersion != settings.settingsVersion) {
+        this.updateSettings(settings)
+      }
+
     } else {
       this.todoListSettings = settings
       this.saveSettingsToLocalStorage()
@@ -93,6 +106,22 @@ class TodoList {
     this.todoListInit()
   }
 
+  updateSettings(settings){
+    
+    for (const key in settings) {
+      if (Object.hasOwnProperty.call(settings, key)) {
+
+        const element = settings[key];
+        
+        if (!Object.hasOwnProperty.call(this.todoListSettings, key)){
+          this.todoListSettings[key] = element
+        }
+      }
+    }
+
+    this.saveSettingsToLocalStorage()
+  }
+
   createListItem() {
     let inputValue = document.querySelector('#inputTodo')
     let itemIcon = document.querySelector('#icon-color-picker-button').getAttribute('data-item-icon')
@@ -112,10 +141,58 @@ class TodoList {
 
   }
 
-  sortList() {
-    let todoListSorted = []
+  sortList(listItems, sortField = 'dt', sortUpDown = 'down') {
 
-    return todoListSorted
+    switch (sortField) {
+      case 'dt':
+      case 'itemDateTime':
+        if (sortUpDown == 'down') {
+          return listItems.sort((a, b) => a.itemDateTime - b.itemDateTime)
+        }
+        if (sortUpDown == 'up') {
+          return listItems.sort((a, b) => b.itemDateTime - a.itemDateTime)
+        }
+        break;
+
+      case 'i':
+        console.log('i_down', listItems)
+        if (sortUpDown == 'down') {
+          return listItems.sort((a, b) => a.itemIcon - b.itemIcon)
+        }
+        if (sortUpDown == 'up') {
+          console.log('i_up', listItems)
+          return listItems.sort((a, b) => b.itemIcon - a.itemIcon)
+        }
+        break;
+
+      case 'ic':
+        console.log('i_down', listItems)
+        if (sortUpDown == 'down') {
+          return listItems.sort((a, b) => a.itemIconColor - b.itemIconColor)
+        }
+        if (sortUpDown == 'up') {
+          console.log('i_up', listItems)
+          return listItems.sort((a, b) => b.itemIconColor - a.itemIconColor)
+        }
+        break;
+
+      case 'ci':
+        console.log('i_down', listItems)
+        if (sortUpDown == 'down') {
+          return listItems.sort((a, b) => a.checkedItem - b.checkedItem)
+        }
+        if (sortUpDown == 'up') {
+          console.log('i_up', listItems)
+          return listItems.sort((a, b) => b.checkedItem - a.checkedItem)
+        }
+        break;
+
+
+      default:
+        break;
+    }
+
+    return listItems
   }
 
   setIconColorButton(iconID, colorID) {
@@ -151,15 +228,17 @@ class TodoList {
     document.querySelector('#icon-color-picker-button').addEventListener('click', event => {
       let modal = this.iconColorPickerModalWindow()
       setTimeout(() => {
-        modal.open()  
+        modal.open()
       }, 0);
-      
+
     })
     // this.iconColorPickerModalWindow()
 
-    this.loadListFromDB().then(rs => this.renderList(this.todoListItems))
+    // this.loadListFromDB().then(rs => this.renderList(this.todoListItems))
 
     // this.loadListFromDB().then(rs => this.renderList(this.filterList(this.filters.i, 2)))
+
+    this.loadListFromDB().then(rs => this.renderList(this.sortList(this.todoListItems, this.todoListSettings.sortField, this.todoListSettings.sortUpDown)))
 
     this.setIconColorButton(this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor)
 
@@ -693,7 +772,7 @@ class TodoList {
     return d.slice(0, 3).join('.') + ' ' + d.slice(3).join(':');
   }
 
-  createIconPicker(){
+  createIconPicker() {
     let icons = document.createElement('div')
     icons.classList.add('icon-color-picker__icons')
 
@@ -717,7 +796,7 @@ class TodoList {
     return icons
   }
 
-  createColorPicker(){
+  createColorPicker() {
     let colors = document.createElement('div')
     colors.classList.add('icon-color-picker__colors')
 
@@ -751,7 +830,7 @@ class TodoList {
       footerButtons: [{
           type: 'ok',
           handler() {
-            
+
             thisTodo.todoListSettings.lastIcon = currentIconColor[0]
             thisTodo.todoListSettings.lastIconColor = currentIconColor[1]
 
@@ -760,21 +839,21 @@ class TodoList {
             thisTodo.saveSettingsToLocalStorage()
 
             modal.close()
-            
+
           }
         },
         {
           type: 'cancel',
           handler() {
-            modal.close()            
+            modal.close()
           }
         },
       ],
       content: ''
-    }    
+    }
 
     let currentIconColor = [this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor]
-    
+
     const icons = this.createIconPicker()
     const colors = this.createColorPicker()
 
