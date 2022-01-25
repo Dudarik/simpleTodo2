@@ -42,7 +42,7 @@ let defaultSettings = {
 
   sortSave: false, 
   sortField: 'ci',
-  sortUpDown: 'down',
+  sortUpDown: 'up',
 
   settingsVersion: 1,
 
