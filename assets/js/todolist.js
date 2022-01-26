@@ -234,7 +234,7 @@ class TodoList {
 
     })
 
-    this.todoListSettings.chekedDown = true
+    // this.todoListSettings.chekedDown = true
     this.saveSettingsToLocalStorage()
     // this.iconColorPickerModalWindow()
 
