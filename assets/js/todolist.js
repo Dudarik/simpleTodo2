@@ -237,8 +237,9 @@ class TodoList {
     // this.loadListFromDB().then(rs => this.renderList(this.todoListItems))
 
     // this.loadListFromDB().then(rs => this.renderList(this.filterList(this.filters.i, 2)))
+    console.log(this.todoListSettings)
 
-    this.loadListFromDB().then(rs => this.renderList(this.sortList(this.todoListItems, this.todoListSettings.sortField, this.todoListSettings.sortUpDown)))
+    this.loadListFromDB().then(rs => this.renderList(this.todoListItems))
 
     this.setIconColorButton(this.todoListSettings.lastIcon, this.todoListSettings.lastIconColor)
 
@@ -422,8 +423,6 @@ class TodoList {
 
         if (db) {
 
-          // console.log(this.todoListSettings.DB_STORE_NAME)
-
           let transaction = db.transaction(this.todoListSettings.DB_STORE_NAME, STORE_ACCESS_RW)
 
           let objStore = transaction.objectStore(this.todoListSettings.DB_STORE_NAME)
@@ -470,8 +469,6 @@ class TodoList {
         let db = event.target.result
 
         if (db) {
-
-          // console.log(this.todoListSettings.DB_STORE_NAME)
 
           let transaction = db.transaction(this.todoListSettings.DB_STORE_NAME, STORE_ACCESS_RW)
 
@@ -671,6 +668,9 @@ class TodoList {
     }
 
     // console.log('items', listItems)
+
+    listItems = this.sortList(listItems, this.todoListSettings.sortField, this.todoListSettings.sortUpDown)
+
 
     for (let i = listItems.length - 1; i >= 0; i--) {
 
