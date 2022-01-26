@@ -13,18 +13,18 @@ t.modal = function(options){
 
     buttons.forEach(button => {
       
-      let b = ''
+      let $button = ''
       if (button.type == 'ok'){
-        b = document.querySelector('#tmpl_modal-window__button_ok').content.cloneNode(true).querySelector('.modal-window__ok-button')
+        $button = document.querySelector('#tmpl_modal-window__button_ok').content.cloneNode(true).querySelector('.modal-window__ok-button')
       }
 
       if (button.type == 'cancel'){
-        b = document.querySelector('#tmpl_modal-window__button_cancel').content.cloneNode(true).querySelector('.modal-window__cancel-button')
+        $button = document.querySelector('#tmpl_modal-window__button_cancel').content.cloneNode(true).querySelector('.modal-window__cancel-button')
       }
       
-      b.addEventListener('click', button.handler)
+      $button.addEventListener('click', button.handler)
 
-      $buttons.insertAdjacentElement('afterbegin', b)
+      $buttons.insertAdjacentElement('afterbegin', $button)
     })
 
     return $buttons
