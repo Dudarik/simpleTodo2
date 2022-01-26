@@ -43,8 +43,9 @@ let defaultSettings = {
   sortSave: false, 
   sortField: 'ci',
   sortUpDown: 'up',
+  chekedDown: false,
 
-  settingsVersion: 1,
+  settingsVersion: 2,
 
   DB_NAME: 'todoListDB',
   DB_VERSION: 1,
@@ -107,7 +108,7 @@ class TodoList {
   }
 
   updateSettings(settings){
-    
+    this.todoListSettings.settingsVersion = settings.settingsVersion    
     for (const key in settings) {
       if (Object.hasOwnProperty.call(settings, key)) {
 
@@ -232,6 +233,9 @@ class TodoList {
       }, 0);
 
     })
+
+    this.todoListSettings.chekedDown = true
+    this.saveSettingsToLocalStorage()
     // this.iconColorPickerModalWindow()
 
     // this.loadListFromDB().then(rs => this.renderList(this.todoListItems))
@@ -667,9 +671,14 @@ class TodoList {
       return
     }
 
-    // console.log('items', listItems)
+    // console.log('items', listItems)      
 
-    listItems = this.sortList(listItems, this.todoListSettings.sortField, this.todoListSettings.sortUpDown)
+    // listItems = this.sortList(listItems, this.todoListSettings.sortField, this.todoListSettings.sortUpDown)
+    listItems = this.sortList(listItems, 'dt', 'up')
+
+    if (this.todoListSettings.chekedDown) { 
+      listItems = this.sortList(listItems, 'ci', 'up')
+    }
 
 
     for (let i = listItems.length - 1; i >= 0; i--) {
@@ -886,9 +895,10 @@ class TodoList {
 
 // ***************************************tests***************************************
 
-// indexedDB.deleteDatabase('todoListDB')
+
 console.time()
 let tdl = new TodoList(defaultSettings);
+// indexedDB.deleteDatabase('todoListDB')
 // tdl.iconColorPickerModalWindow()
 
 // modal.open()
