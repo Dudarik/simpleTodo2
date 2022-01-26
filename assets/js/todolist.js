@@ -673,8 +673,8 @@ class TodoList {
 
     // console.log('items', listItems)      
 
-    // listItems = this.sortList(listItems, this.todoListSettings.sortField, this.todoListSettings.sortUpDown)
-    listItems = this.sortList(listItems, 'dt', 'up')
+    listItems = this.sortList(listItems, this.todoListSettings.sortField, this.todoListSettings.sortUpDown)
+    // listItems = this.sortList(listItems, 'dt', 'up')
 
     if (this.todoListSettings.chekedDown) { 
       listItems = this.sortList(listItems, 'ci', 'up')
