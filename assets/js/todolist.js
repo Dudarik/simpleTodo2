@@ -228,9 +228,11 @@ class TodoList {
 
     document.querySelector('#icon-color-picker-button').addEventListener('click', event => {
       let modal = this.iconColorPickerModalWindow()
-      setTimeout(() => {
+      let to = setTimeout(() => {
         modal.open()
+        clearTimeout(to)
       }, 0);
+
 
     })
 
