@@ -128,7 +128,7 @@ class TodoList {
     let itemIcon = document.querySelector('#icon-color-picker-button').getAttribute('data-item-icon')
     let itemIconColor = document.querySelector('#icon-color-picker-button').getAttribute('data-item-icon-color')
 
-    let listItem = new ItemTodoList(inputValue.value, itemIcon, itemIconColor)
+    let listItem = new ItemTodoList(inputValue.value.trim(), itemIcon, itemIconColor)
 
     inputValue.value = ''
 
@@ -258,9 +258,9 @@ class TodoList {
 
     })
 
-    inputTodo.addEventListener('keyup', event => {
+    inputTodo.addEventListener('keydown', event => {
 
-      if (event.code === 'Enter') this.addTodoListItem(this.createListItem())
+      if (event.code === 'Enter' && (event.ctrlKey || event.metaKey)) this.addTodoListItem(this.createListItem())
 
     })
 
@@ -364,10 +364,10 @@ class TodoList {
 
     ta.classList.add('todolist__item-text-editor')
 
-    ta.value = elem.innerHTML
+    ta.value = elem.innerText
 
-    ta.addEventListener('keyup', ev => {
-      if (ev.key == 'Enter') {
+    ta.addEventListener('keydown', ev => {
+      if (ev.key == 'Enter' && (ev.ctrlKey || ev.metaKey)) {
         ta.blur()
       }
     })
@@ -378,8 +378,11 @@ class TodoList {
         console.log(new Error('Невозможно отредактировать элемент'))
         return
       }
-      todoListItem.itemText = ta.value
-      elem.innerHTML = ta.value
+
+      const editText = ta.value.trim()
+
+      todoListItem.itemText = editText
+      elem.innerText = editText
 
       this.saveListToDB(todoListItem)
       ta.replaceWith(elem)

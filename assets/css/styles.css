@@ -608,7 +608,7 @@ body {
     height: 50px;
   }
   .icon-color-picker__button {
-    margin-right: 1rem;
+    margin-right: .8rem;
   }
   .todolist__item {
     -webkit-box-orient: horizontal;
