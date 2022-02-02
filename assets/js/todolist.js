@@ -95,7 +95,14 @@ class TodoList {
       this.createDB()
     }
 
-    this.filters = {
+    this.filterFields = {
+      i: 'itemIcon',
+      ic: 'itemIconColor',
+      dt: 'itemDateTime',
+      ci: 'checkedItem'
+    }
+
+    this.sortFields = {
       i: 'itemIcon',
       ic: 'itemIconColor',
       dt: 'itemDateTime',
@@ -143,56 +150,14 @@ class TodoList {
   }
 
   sortList(listItems, sortField = 'dt', sortUpDown = 'down') {
-
-    switch (sortField) {
-      case 'dt':
-      case 'itemDateTime':
-        if (sortUpDown == 'down') {
-          return listItems.sort((a, b) => a.itemDateTime - b.itemDateTime)
-        }
-        if (sortUpDown == 'up') {
-          return listItems.sort((a, b) => b.itemDateTime - a.itemDateTime)
-        }
-        break;
-
-      case 'i':
-        console.log('i_down', listItems)
-        if (sortUpDown == 'down') {
-          return listItems.sort((a, b) => a.itemIcon - b.itemIcon)
-        }
-        if (sortUpDown == 'up') {
-          console.log('i_up', listItems)
-          return listItems.sort((a, b) => b.itemIcon - a.itemIcon)
-        }
-        break;
-
-      case 'ic':
-        console.log('i_down', listItems)
-        if (sortUpDown == 'down') {
-          return listItems.sort((a, b) => a.itemIconColor - b.itemIconColor)
-        }
-        if (sortUpDown == 'up') {
-          console.log('i_up', listItems)
-          return listItems.sort((a, b) => b.itemIconColor - a.itemIconColor)
-        }
-        break;
-
-      case 'ci':
-        console.log('i_down', listItems)
-        if (sortUpDown == 'down') {
-          return listItems.sort((a, b) => a.checkedItem - b.checkedItem)
-        }
-        if (sortUpDown == 'up') {
-          console.log('i_up', listItems)
-          return listItems.sort((a, b) => b.checkedItem - a.checkedItem)
-        }
-        break;
-
-
-      default:
-        break;
+    
+    if (sortUpDown == 'down'){
+      return listItems.sort((a, b) => a[this.sortFields[sortField]] - b[this.sortFields[sortField]])
     }
 
+    if (sortUpDown == 'up'){
+      return listItems.sort((a, b) => b[this.sortFields[sortField]] - a[this.sortFields[sortField]])
+    }
     return listItems
   }
 
