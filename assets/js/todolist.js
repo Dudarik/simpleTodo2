@@ -142,8 +142,10 @@ class TodoList {
     return listItem
   }
 
-  filterList(filters, filterValue) {
+  filterList(listItems, filters, filterValue) {
     // [[i, [1,3,5,6]], [ic, [1,3]], [dt, [startDate, endDate]], [ci, [true]]]
+
+
 
     return this.todoListItems.filter(item => item[filters] === filterValue)
 
@@ -878,6 +880,23 @@ let tdl = new TodoList(defaultSettings);
 // }, 2000)
 
 console.timeEnd()
+setTimeout(() => {
+  let nArr = Array.from(tdl.todoListItems)
+  let filterA = [['itemIcon', [0,6]], ['ic', [2]], ['ci', [true]]]
+  let filterO = {
+    'itemIcon': [0, 6],
+    'itemIconColor': [2],
+    'checkedItem': [true, false]
+  }
+  console.log(nArr)
+  console.log(
+    nArr.filter(item => {
+      console.log(item.itemIcon,filterO['itemIcon'][1])
+      return filterO['itemIcon'].includes(item.itemIcon) || filterO['itemIconColor'].includes(item.itemIconColor)
+    })
+  )
+}, 300);
+
 
 // console.log(tdl);
 
