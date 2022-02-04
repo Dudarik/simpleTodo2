@@ -21,6 +21,10 @@ t.modal = function(options){
       if (button.type == 'cancel'){
         $button = document.querySelector('#tmpl_modal-window__button_cancel').content.cloneNode(true).querySelector('.modal-window__cancel-button')
       }
+
+      if (button.type == 'reset'){
+        $button = document.querySelector('#tmpl_modal-window__button_reset').content.cloneNode(true).querySelector('.modal-window__reset-button')
+      }
       
       $button.addEventListener('click', button.handler)
 

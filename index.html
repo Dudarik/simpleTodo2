@@ -22,16 +22,17 @@
         <div class="todolist-form__inputdata">
 
           <div class="todolist-form__control-buttons">
-                      
-            <button class="swiper-slide inputdata__button">
+
+            <button id="filter-button" class="inputdata__button">
               <i class="fas fa-filter"></i>
             </button>
 
-            <button class="swiper-slide inputdata__button">
+            <button class="inputdata__button">
               <i class="fas fa-sliders-h"></i>
             </button>
 
-            <button id="icon-color-picker-button" class="inputdata__button icon-color-picker__button" data-item-icon="" data-item-icon-color="">
+            <button id="icon-color-picker-button" class="inputdata__button icon-color-picker__button" data-item-icon=""
+              data-item-icon-color="">
               <div class="save-button-icon">
                 <i class="far fa-grin"></i>
               </div>
@@ -42,15 +43,16 @@
           <!-- <input type="text" id="inputTodo" class="text-input inputdata__text-input mt-sd-1 mr-ld-1"
             placeholder="Введите текст"> -->
 
-            <textarea placeholder="Введите текст" name="inputTodo" id="inputTodo" cols="20" rows="2" class="text-input inputdata__text-input mt-sd-1 mr-ld-1"></textarea>
-          
-            <button id="addButton" class="inputdata__button mt-sd-1 mr-ld-1">
-              <div class="save-button-icon">
-                <i class="fa fa-floppy-o"></i>
-              </div>
-            </button>
+          <textarea placeholder="Введите текст" name="inputTodo" id="inputTodo" cols="20" rows="2"
+            class="text-input inputdata__text-input mt-sd-1 mr-ld-1"></textarea>
 
-            <!-- <button id="addButton" class="inputdata__button settings__button">
+          <button id="addButton" class="inputdata__button mt-sd-1 mr-ld-1">
+            <div class="save-button-icon">
+              <i class="fa fa-floppy-o"></i>
+            </div>
+          </button>
+
+          <!-- <button id="addButton" class="inputdata__button settings__button">
               
               <i class="fas fa-cog"></i>
               
@@ -122,9 +124,14 @@
         class="fas fa-ban"></i></button>
   </template>
 
+  <template id="tmpl_modal-window__button_reset">
+    <button class="inputdata__button modal-window__reset-button">
+      <i class="fas fa-toilet"></i></button>
+  </template>
+
 
   <div class="debug">
-
+    <input id="datetime" type="datetime-local">
   </div>
 
   <div class="cssdebug">

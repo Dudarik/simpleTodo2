@@ -40,7 +40,7 @@ let defaultSettings = {
   lastIcon: 0,
   lastIconColor: 0,
 
-  sortSave: false, 
+  sortSave: false,
   sortField: 'ci',
   sortUpDown: 'up',
   chekedDown: false,
@@ -73,7 +73,7 @@ class ItemTodoList {
 class TodoList {
 
   constructor(settings) {
-    
+
     if (localStorage.todoListSettings) {
       this.todoListSettings = this.loadSettingsFromLocalStorage()
 
@@ -95,12 +95,29 @@ class TodoList {
       this.createDB()
     }
 
-    this.filterFields = {
-      i: 'itemIcon',
-      ic: 'itemIconColor',
-      dt: 'itemDateTime',
-      ci: 'checkedItem'
+    this.filterSettings = {
+      'itemIcon': [],
+      'itemIconColor': [],
+      'checkedItem': [true, false],
+      'itemDateTime': {
+        startDate: '',
+        endDate: ''
+      }
     }
+
+    this.filterEnable = {
+      'itemIcon': false,
+      'itemIconColor': false,
+      'checkedItem': false,
+      'itemDateTime': false,
+    }
+
+    // this.filterFields = {
+    //   i: 'itemIcon',
+    //   ic: 'itemIconColor',
+    //   dt: 'itemDateTime',
+    //   ci: 'checkedItem'
+    // }
 
     this.sortFields = {
       i: 'itemIcon',
@@ -114,14 +131,14 @@ class TodoList {
     this.todoListInit()
   }
 
-  updateSettings(settings){
-    this.todoListSettings.settingsVersion = settings.settingsVersion    
+  updateSettings(settings) {
+    this.todoListSettings.settingsVersion = settings.settingsVersion
     for (const key in settings) {
       if (Object.hasOwnProperty.call(settings, key)) {
 
         const element = settings[key];
-        
-        if (!Object.hasOwnProperty.call(this.todoListSettings, key)){
+
+        if (!Object.hasOwnProperty.call(this.todoListSettings, key)) {
           this.todoListSettings[key] = element
         }
       }
@@ -142,22 +159,52 @@ class TodoList {
     return listItem
   }
 
-  filterList(listItems, filters, filterValue) {
-    // [[i, [1,3,5,6]], [ic, [1,3]], [dt, [startDate, endDate]], [ci, [true]]]
+  filterList(listItems) {
+    console.log(listItems)
+    const ITEM_ICON = 'itemIcon'
+    const ITEM_ICON_COLOR = 'itemIconColor'
+    const ITEM_DATE_TIME = 'itemDateTime'
+    const ITEM_CHECKED = 'checkedItem'
 
+    if (!this.filterSettings[ITEM_ICON].length) {
+      this.filterEnable[ITEM_ICON] = false
+      console.log('Filter icon enable = ', this.filterEnable[ITEM_ICON])
+    }
 
+    if (!this.filterSettings[ITEM_ICON_COLOR].length) {
+      this.filterEnable[ITEM_ICON_COLOR] = false
+      console.log('Filter icon-color enable = ', this.filterEnable[ITEM_ICON_COLOR])
+    }
 
-    return this.todoListItems.filter(item => item[filters] === filterValue)
+    if (!this.filterSettings[ITEM_CHECKED].length) {
+      this.filterEnable[ITEM_CHECKED] = false
+      console.log('Filter checkedItem enable = ', this.filterEnable[ITEM_CHECKED])
+    }
 
+    if (!this.filterSettings[ITEM_DATE_TIME]['startDate'] || !this.filterSettings[ITEM_DATE_TIME]['endDate']) {
+      this.filterEnable[ITEM_DATE_TIME] = false
+      console.log('Filter dateTime enable = ', this.filterEnable[ITEM_DATE_TIME])
+    }
+
+    return listItems.filter(item => {
+      return (
+        (this.filterEnable[ITEM_ICON] ? this.filterSettings[ITEM_ICON].includes(item[ITEM_ICON]) : true) &&
+        (this.filterEnable[ITEM_ICON_COLOR] ? this.filterSettings[ITEM_ICON_COLOR].includes(item[ITEM_ICON_COLOR]) : true) &&
+        (this.filterEnable[ITEM_CHECKED] ? this.filterSettings[ITEM_CHECKED].includes(item[ITEM_CHECKED]) : true)
+
+        &&
+        (this.filterEnable[ITEM_DATE_TIME] ? (item[ITEM_DATE_TIME] >= this.filterSettings[ITEM_DATE_TIME]['startDate'] &&
+          item[ITEM_DATE_TIME] <= this.filterSettings[ITEM_DATE_TIME]['endDate']) : true))
+    })
   }
 
   sortList(listItems, sortField = 'dt', sortUpDown = 'down') {
-    
-    if (sortUpDown == 'down'){
+
+    if (sortUpDown == 'down') {
       return listItems.sort((a, b) => a[this.sortFields[sortField]] - b[this.sortFields[sortField]])
     }
 
-    if (sortUpDown == 'up'){
+    if (sortUpDown == 'up') {
       return listItems.sort((a, b) => b[this.sortFields[sortField]] - a[this.sortFields[sortField]])
     }
     return listItems
@@ -199,18 +246,20 @@ class TodoList {
         modal.open()
         clearTimeout(to)
       }, 0);
+    })
 
-
+    document.querySelector('#filter-button').addEventListener('click', event => {
+      let modal = this.filterModalWindow()
+      let to = setTimeout(() => {
+        modal.open()
+        clearTimeout(to)
+      }, 0);
     })
 
     // this.todoListSettings.chekedDown = true
     this.saveSettingsToLocalStorage()
-    // this.iconColorPickerModalWindow()
 
-    // this.loadListFromDB().then(rs => this.renderList(this.todoListItems))
-
-    // this.loadListFromDB().then(rs => this.renderList(this.filterList(this.filters.i, 2)))
-    console.log(this.todoListSettings)
+    // console.log(this.todoListSettings)
 
     this.loadListFromDB().then(rs => this.renderList(this.todoListItems))
 
@@ -643,12 +692,14 @@ class TodoList {
       return
     }
 
-    // console.log('items', listItems)      
+    console.log('items', listItems)
+    
+    listItems = this.filterList(listItems)
 
     listItems = this.sortList(listItems, this.todoListSettings.sortField, this.todoListSettings.sortUpDown)
     // listItems = this.sortList(listItems, 'dt', 'up')
 
-    if (this.todoListSettings.chekedDown) { 
+    if (this.todoListSettings.chekedDown) {
       listItems = this.sortList(listItems, 'ci', 'up')
     }
 
@@ -753,7 +804,7 @@ class TodoList {
     return d.slice(0, 3).join('.') + ' ' + d.slice(3).join(':');
   }
 
-  createIconPicker() {
+  createIconPicker(createFor = 'createListItem') {
     let icons = document.createElement('div')
     icons.classList.add('icon-color-picker__icons')
 
@@ -769,7 +820,15 @@ class TodoList {
         icon.classList.add(cl[j])
 
       }
-      if (i == this.todoListSettings.lastIcon) icon.classList.add('icon__active')
+      if (createFor == 'createListItem'){
+        if (i == this.todoListSettings.lastIcon) icon.classList.add('icon__active')
+      }
+
+      if (createFor == 'filter'){
+        if (this.filterSettings['itemIcon'].includes(i)){
+          icon.classList.add('icon__active')
+        }
+      }
 
       icons.appendChild(icon)
     }
@@ -777,7 +836,8 @@ class TodoList {
     return icons
   }
 
-  createColorPicker() {
+  createColorPicker(createFor = 'createListItem') {
+
     let colors = document.createElement('div')
     colors.classList.add('icon-color-picker__colors')
 
@@ -792,8 +852,13 @@ class TodoList {
 
       color.setAttribute('data-icon-color-id', Object.keys(itemIconsColors)[i])
 
-      if (i == this.todoListSettings.lastIconColor) color.classList.add('icon-color__active')
+      if (createFor == 'createListItem'){
+        if (i == this.todoListSettings.lastIconColor) color.classList.add('icon-color__active')
+      }
 
+      if (createFor == 'filter'){        
+          if (this.filterSettings['itemIconColor'].includes(i)) color.classList.add('icon-color__active')        
+      }
       colors.appendChild(color)
     }
 
@@ -863,6 +928,100 @@ class TodoList {
     let modal = new t.modal(options)
     return modal
   }
+
+  filterModalWindow() {
+    let thisTodo = this
+
+    let options = {
+      title: 'Выбери иконку и цвет записи',
+      modalOverlayClose: true,
+      footerButtons: [{
+          type: 'ok',
+          handler() {
+            // this.filterSettings = {
+            //   'itemIcon': [],
+            //   'itemIconColor': [],
+            //   'checkedItem': [true, false],
+            //   'itemDateTime': {
+            //     startDate: '',
+            //     endDate: ''
+            //   }
+            // }
+        
+            // this.filterEnable = {
+            //   'itemIcon': false,
+            //   'itemIconColor': false,
+            //   'checkedItem': false,
+            //   'itemDateTime': false,
+            // }            
+
+            const activeIcons = document.querySelectorAll('.icon__active')
+            const activeColors = document.querySelectorAll('.icon-color__active')
+
+            console.log(activeColors)
+          
+            if (activeIcons) {
+
+              thisTodo.filterSettings['itemIcon'] = []
+
+              for (const item of activeIcons) {
+                thisTodo.filterSettings['itemIcon'].push(Number(item.getAttribute('data-icon-id')))
+              }
+            }
+
+            if (activeColors) {
+
+              thisTodo.filterSettings['itemIconColor'] = []
+
+              for (const item of activeColors) {
+                thisTodo.filterSettings['itemIconColor'].push(Number(item.getAttribute('data-icon-color-id')))
+              }
+            }
+
+            if (thisTodo.filterSettings['itemIcon'].length > 0) thisTodo.filterEnable['itemIcon'] = true
+            if (thisTodo.filterSettings['itemIconColor'].length > 0) thisTodo.filterEnable['itemIconColor'] = true
+
+            thisTodo.renderList(thisTodo.todoListItems)
+
+            modal.close()
+
+            
+
+          }
+        },
+        {
+          type: 'reset',
+          handler() {
+            modal.close()
+          }
+        },
+        {
+          type: 'cancel',
+          handler() {
+            modal.close()
+          }
+        },
+      ],
+      content: ''
+    }
+
+    const icons = this.createIconPicker('filter')
+    const colors = this.createColorPicker('filter')
+
+    icons.addEventListener('click', event => {
+      event.target.classList.toggle('icon__active')
+    })
+
+    colors.addEventListener('click', event => {
+      event.target.classList.toggle('icon-color__active')
+    })
+
+    options.content = [icons, colors]
+
+
+    let modal = new t.modal(options)
+    return modal
+  }
 }
 
 // ***************************************tests***************************************
@@ -873,6 +1032,7 @@ let tdl = new TodoList(defaultSettings);
 // indexedDB.deleteDatabase('todoListDB')
 // tdl.iconColorPickerModalWindow()
 
+// tdl.filterModalWindow()
 // modal.open()
 
 // setTimeout(() => {
@@ -880,22 +1040,7 @@ let tdl = new TodoList(defaultSettings);
 // }, 2000)
 
 console.timeEnd()
-setTimeout(() => {
-  let nArr = Array.from(tdl.todoListItems)
-  let filterA = [['itemIcon', [0,6]], ['ic', [2]], ['ci', [true]]]
-  let filterO = {
-    'itemIcon': [0, 6],
-    'itemIconColor': [2],
-    'checkedItem': [true, false]
-  }
-  console.log(nArr)
-  console.log(
-    nArr.filter(item => {
-      console.log(item.itemIcon,filterO['itemIcon'][1])
-      return filterO['itemIcon'].includes(item.itemIcon) || filterO['itemIconColor'].includes(item.itemIconColor)
-    })
-  )
-}, 300);
+
 
 
 // console.log(tdl);
