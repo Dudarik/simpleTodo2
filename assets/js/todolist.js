@@ -984,9 +984,6 @@ class TodoList {
             thisTodo.renderList(thisTodo.todoListItems)
 
             modal.close()
-
-            
-
           }
         },
         {
@@ -1021,6 +1018,21 @@ class TodoList {
 
     let modal = new t.modal(options)
     return modal
+  }
+
+  findClassInElements(className, type = "*"){
+  
+    const elems = document.querySelectorAll(type)
+    const regexp = new RegExp("(^|\\s)" + className + "(\\s|$)")
+  
+    const result = []
+  
+    for (let i = 0; i < elems.length; i++) {
+      if(regexp.test(elems[i].className)){
+        result.push(elems[i])
+      }    
+    }
+    return result
   }
 }
 
