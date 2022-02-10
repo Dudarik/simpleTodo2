@@ -933,7 +933,7 @@ class TodoList {
     let thisTodo = this
 
     let options = {
-      title: 'Выбери иконку и цвет записи',
+      title: 'Выбери иконки и цвета записей',
       modalOverlayClose: true,
       footerButtons: [{
           type: 'ok',
