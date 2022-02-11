@@ -693,7 +693,7 @@ class TodoList {
     }
 
     console.log('items', listItems)
-    
+
     listItems = this.filterList(listItems)
 
     listItems = this.sortList(listItems, this.todoListSettings.sortField, this.todoListSettings.sortUpDown)
@@ -820,12 +820,12 @@ class TodoList {
         icon.classList.add(cl[j])
 
       }
-      if (createFor == 'createListItem'){
+      if (createFor == 'createListItem') {
         if (i == this.todoListSettings.lastIcon) icon.classList.add('icon__active')
       }
 
-      if (createFor == 'filter'){
-        if (this.filterSettings['itemIcon'].includes(i)){
+      if (createFor == 'filter') {
+        if (this.filterSettings['itemIcon'].includes(i)) {
           icon.classList.add('icon__active')
         }
       }
@@ -852,12 +852,12 @@ class TodoList {
 
       color.setAttribute('data-icon-color-id', Object.keys(itemIconsColors)[i])
 
-      if (createFor == 'createListItem'){
+      if (createFor == 'createListItem') {
         if (i == this.todoListSettings.lastIconColor) color.classList.add('icon-color__active')
       }
 
-      if (createFor == 'filter'){        
-          if (this.filterSettings['itemIconColor'].includes(i)) color.classList.add('icon-color__active')        
+      if (createFor == 'filter') {
+        if (this.filterSettings['itemIconColor'].includes(i)) color.classList.add('icon-color__active')
       }
       colors.appendChild(color)
     }
@@ -947,7 +947,7 @@ class TodoList {
             //     endDate: ''
             //   }
             // }
-        
+
             // this.filterEnable = {
             //   'itemIcon': false,
             //   'itemIconColor': false,
@@ -959,7 +959,7 @@ class TodoList {
             const activeColors = document.querySelectorAll('.icon-color__active')
 
             console.log(activeColors)
-          
+
             if (activeIcons) {
 
               thisTodo.filterSettings['itemIcon'] = []
@@ -1005,13 +1005,52 @@ class TodoList {
     const icons = this.createIconPicker('filter')
     const colors = this.createColorPicker('filter')
 
-    icons.addEventListener('click', event => {
-      event.target.classList.toggle('icon__active')
+    let boolMouseDown = false
+
+    icons.addEventListener('mousedown', event => {
+
+      event.preventDefault()
+
+      boolMouseDown = true
+
+      if (event.target.tagName.toLowerCase() == 'i') event.target.classList.toggle('icon__active')
+
     })
 
-    colors.addEventListener('click', event => {
-      event.target.classList.toggle('icon-color__active')
+    icons.addEventListener('mouseover', event => {
+      if (event.target.tagName.toLowerCase() == 'i' && boolMouseDown) event.target.classList.toggle('icon__active')
     })
+
+    icons.addEventListener('mouseup', () => {
+      boolMouseDown = false
+    })
+
+    colors.addEventListener('mousedown', event => {
+
+      event.preventDefault()
+
+      boolMouseDown = true
+
+      if (event.target.tagName.toLowerCase() == 'i') event.target.classList.toggle('icon__active')
+
+    })
+
+    colors.addEventListener('mouseover', event => {
+      if (event.target.tagName.toLowerCase() == 'i' && boolMouseDown) event.target.classList.toggle('icon-color__active')
+    })
+
+    colors.addEventListener('mouseup', () => {
+      boolMouseDown = false
+    })
+
+
+    // icons.addEventListener('click', event => {
+    //   event.target.classList.toggle('icon__active')
+    // })
+
+    // colors.addEventListener('click', event => {
+    //   event.target.classList.toggle('icon-color__active')
+    // })
 
     options.content = [icons, colors]
 
@@ -1020,17 +1059,17 @@ class TodoList {
     return modal
   }
 
-  findClassInElements(className, type = "*"){
-  
+  findClassInElements(className, type = "*") {
+
     const elems = document.querySelectorAll(type)
     const regexp = new RegExp("(^|\\s)" + className + "(\\s|$)")
-  
+
     const result = []
-  
+
     for (let i = 0; i < elems.length; i++) {
-      if(regexp.test(elems[i].className)){
+      if (regexp.test(elems[i].className)) {
         result.push(elems[i])
-      }    
+      }
     }
     return result
   }
